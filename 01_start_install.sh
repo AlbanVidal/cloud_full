@@ -1,5 +1,45 @@
 #!/bin/bash
 
+#
+# BSD 3-Clause License
+# 
+# Copyright (c) 2018, Alban Vidal <alban.vidal@zordhak.fr>
+# All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 
+# * Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+# 
+# * Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+# 
+# * Neither the name of the copyright holder nor the names of its
+#   contributors may be used to endorse or promote products derived from
+#   this software without specific prior written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+################################################################################
+##########                    Define color to output:                 ########## 
+################################################################################
+_WHITE_="tput sgr0"
+_RED_="tput setaf 1"
+_GREEN_="tput setaf 2"
+_ORANGE_="tput setaf 3"
+################################################################################
+
 # TODO
 # - logrotate (all CT)
 # - iptables isolateur: Deny !80 !443
@@ -8,21 +48,26 @@
 if [ -f 00_VARS ]; then
     . 00_VARS
 else
-    > 00_VARS
-    echo "Please reply to the next questions"
+    echo ""
+    echo "$($_RED_)File « 00_VARS » don't exist$($_WHITE_)"
+    echo "$($_ORANGE_)Please reply to the next questions$($_WHITE_)"
     echo ""
     echo -n "FQDN: "
     read FQDN
-    echo $FQDN >> 00_VARS
     echo -n "Collabora FQDN: "
     read FQDN_collabora
-    echo $FQDN_collabora >> 00_VARS
-    echo "Test email (to test Postfix after conf): "
+    echo -n "Test email (to test Postfix after conf): "
     read MAIL_TEST
-    echo $MAIL_TEST >> 00_VARS
-    echo "Certbort Alert email: "
+    echo -n "Certbort Alert email: "
     read EMAIL_CERTBOT
-    echo $EMAIL_CERTBOT >> 00_VARS
+
+    cat << EOF > 00_VARS
+FQDN="$FQDN"
+FQDN_collabora="$FQDN_collabora"
+MAIL_TEST="$MAIL_TEST"
+EMAIL_CERTBOT="$EMAIL_CERTBOT"
+EOF
+
 fi
 ################################################################################
 #### EDITABLE VARS
@@ -53,15 +98,19 @@ PRIVATE_NETWORK="172.17.0.0/24"
 #### HOST CONFIGURATION
 
 # Update apt package list
-apt-get update
+echo "$($_ORANGE_)Update apt package list$($_WHITE_)"
+apt-get update > /dev/null
 
 #############
-DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
+echo "$($_ORANGE_)Upgrading system packages$($_WHITE_)"
+DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null
 
 
 # Nat post 80 and 443 => RVPRX
 # Enable Masquerade and NAT rules
-DEBIAN_FRONTEND=noninteractive apt-get -y install iptables-persistent
+echo "$($_ORANGE_)Install: iptables-persistent$($_WHITE_)"
+DEBIAN_FRONTEND=noninteractive apt-get -y install iptables-persistent > /dev/null
+echo "$($_ORANGE_)Enable Masquerade and NAT rules$($_WHITE_)"
 cat << EOF > /etc/iptables/rules.v4
 ################################################################################
 ##########                          TABLE NAT                         ########## 
@@ -82,7 +131,7 @@ COMMIT
 EOF
 iptables-restore /etc/iptables/rules.v4
 
-# Disable IPv6 on all connexion
+echo "$($_ORANGE_)Disable IPv6 on all connexion$($_WHITE_)"
 cat << EOF > /etc/sysctl.d/81-disable-ipv6.conf
 # Disable IPv6 on all connexion
 net.ipv6.conf.all.disable_ipv6 = 1
@@ -90,9 +139,10 @@ EOF
 sysctl -p /etc/sysctl.d/81-disable-ipv6.conf
 
 ##### DEBIAN
-DEBIAN_FRONTEND=noninteractive apt-get -y install snapd udev
+echo "$($_ORANGE_)Install: snapd udev and LXD with snapd$($_WHITE_)"
+DEBIAN_FRONTEND=noninteractive apt-get -y install snapd udev > /dev/null
 DEBIAN_FRONTEND=noninteractive apt-get clean
-snap install lxd
+snap install lxd > /dev/null
 
 ##### UBUNTU
 ## Install LXD package
@@ -101,6 +151,7 @@ snap install lxd
 ##apt-get install lxd
 
 # LXD INIT
+echo "$($_ORANGE_)LXD initialization$($_WHITE_)"
 cat << EOF | lxd init --preseed
 # Daemon settings
 config:
@@ -176,31 +227,37 @@ iface ethPrivate inet static
     address _IP_PRIV_/_CIDR_
 EOF
 
+
 # CT 1 - CLOUD
+echo "$($_ORANGE_)LXD create container: cloud$($_WHITE_)"
 lxc launch images:debian/stretch cloud --profile default --profile privNet --profile 1c256m
 sed -e "s/_IP_PUB_/$IP_cloud/" -e "s/_IP_PRIV_/$IP_cloud_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_cloud
 lxc file push /tmp/lxd_interfaces_cloud cloud/etc/network/interfaces
 lxc restart cloud
 
 # CT 2 - COLLABORA
+echo "$($_ORANGE_)LXD create container: collabora$($_WHITE_)"
 lxc launch images:debian/stretch collabora --profile default --profile privNet --profile 1c256m
 sed -e "s/_IP_PUB_/$IP_collabora/" -e "s/_IP_PRIV_/$IP_collabora_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_collabora
 lxc file push /tmp/lxd_interfaces_collabora collabora/etc/network/interfaces
 lxc restart collabora
 
 # CT 3 - MariaDB
+echo "$($_ORANGE_)LXD create container: mariadb$($_WHITE_)"
 lxc launch images:debian/stretch mariadb --profile default --profile privNet --profile 1c256m
 sed -e "s/_IP_PUB_/$IP_mariadb/" -e "s/_IP_PRIV_/$IP_mariadb_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_mariadb
 lxc file push /tmp/lxd_interfaces_mariadb mariadb/etc/network/interfaces
 lxc restart mariadb
 
 # CT 4 - RVPRX
+echo "$($_ORANGE_)LXD create container: rvprx$($_WHITE_)"
 lxc launch images:debian/stretch rvprx --profile default --profile privNet --profile 1c256m
 sed -e "s/_IP_PUB_/$IP_rvprx/" -e "s/_IP_PRIV_/$IP_rvprx_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_rvprx
 lxc file push /tmp/lxd_interfaces_rvprx rvprx/etc/network/interfaces
 lxc restart rvprx
 
 # CT 5 - SMTP
+echo "$($_ORANGE_)LXD create container: smtp$($_WHITE_)"
 lxc launch images:debian/stretch smtp --profile default --profile privNet --profile 1c256m
 sed -e "s/_IP_PUB_/$IP_smtp/" -e "s/_IP_PRIV_/$IP_smtp_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_smtp
 lxc file push /tmp/lxd_interfaces_smtp smtp/etc/network/interfaces
@@ -208,11 +265,16 @@ lxc restart smtp
 
 ################################################################################
 #### CONTAINER CONFIGURATION
+echo ""
+echo "$($_GREEN_)CONTAINER CONFIGURATION$($_WHITE_)"
+echo ""
 
 # SMTP
-lxc exec smtp -- apt-get update
-lxc exec smtp -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
-lxc exec smtp -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install vim postfix bsd-mailx"
+echo "$($_GREEN_)BEGIN smtp$($_WHITE_)"
+echo "$($_ORANGE_)Update, upgrade and packages$($_WHITE_)"
+lxc exec smtp -- apt-get update > /dev/null
+lxc exec smtp -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null"
+lxc exec smtp -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install vim postfix bsd-mailx > /dev/null"
 
 # Postfix conf (create, push and reload)
 cat << 'EOF' > /tmp_lxd_smtp_etc_postfix_main.cf
@@ -258,6 +320,8 @@ lxc exec smtp -- bash -c "echo Test SMTP $FQDN|mail -s 'Test SMTP $FQDN' $MAIL_T
 
 ############################################################
 #### RVPRX
+echo "$($_GREEN_)BEGIN rvprx$($_WHITE_)"
+echo "$($_ORANGE_)Update, upgrade and packages$($_WHITE_)"
 lxc exec rvprx -- bash -c 'echo "deb http://ftp.fr.debian.org/debian stretch-backports main" > /etc/apt/sources.list.d/stretch-backports.list'
 lxc exec rvprx -- apt-get update
 # Upgrade
@@ -393,17 +457,23 @@ lxc exec rvprx -- nginx -s reload
 
 ############################################################
 #### MariaDB
-lxc exec mariadb -- apt-get update
-lxc exec mariadb -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
+echo "$($_GREEN_)BEGIN mariadb$($_WHITE_)"
+echo "$($_ORANGE_)Update, upgrade and packages$($_WHITE_)"
+lxc exec mariadb -- apt-get update > /dev/null
+lxc exec mariadb -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null"
 
 ############################################################
 #### CLOUD
-lxc exec cloud -- apt-get update
-lxc exec cloud -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
+echo "$($_GREEN_)BEGIN cloud$($_WHITE_)"
+echo "$($_ORANGE_)Update, upgrade and packages$($_WHITE_)"
+lxc exec cloud -- apt-get update > /dev/null
+lxc exec cloud -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null"
 
 ############################################################
 #### COLLABORA
-lxc exec collabora -- apt-get update
-lxc exec collabora -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
+echo "$($_GREEN_)BEGIN collabora$($_WHITE_)"
+echo "$($_ORANGE_)Update, upgrade and packages$($_WHITE_)"
+lxc exec collabora -- apt-get update > /dev/null
+lxc exec collabora -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null"
 
 ################################################################################
