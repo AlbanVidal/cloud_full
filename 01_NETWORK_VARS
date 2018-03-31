@@ -1,0 +1,24 @@
+################################################################################
+#### EDITABLE VARS
+#
+CIDR=24
+#
+# External Network (Internet)
+IP_LXD="172.16.0.1"
+IP_cloud="172.16.0.2"
+IP_collabora="172.16.0.3"
+IP_mariadb="172.16.0.4"
+IP_rvprx="172.16.0.5"
+IP_smtp="172.16.0.6"
+#
+# Internal Network (Private)
+IP_cloud_PRIV="172.17.0.2"
+IP_collabora_PRIV="172.31.0.3"
+IP_mariadb_PRIV="172.17.0.4"
+IP_rvprx_PRIV="172.17.0.5"
+IP_smtp_PRIV="172.17.0.6"
+#
+# Private Network (for Postfix)
+PRIVATE_NETWORK="172.17.0.0/24"
+#
+################################################################################
