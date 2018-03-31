@@ -52,13 +52,13 @@ else
     echo "$($_RED_)File « 00_VARS » don't exist$($_WHITE_)"
     echo "$($_ORANGE_)Please reply to the next questions$($_WHITE_)"
     echo ""
-    echo -n "FQDN: "
+    echo -n "$($GREEN)FQDN:$($_WHITE_) "
     read FQDN
-    echo -n "Collabora FQDN: "
+    echo -n "$($GREEN)Collabora FQDN:$($_WHITE_) "
     read FQDN_collabora
-    echo -n "Test email (to test Postfix after conf): "
+    echo -n "$($GREEN)Test email (to test Postfix after conf):$($_WHITE_) "
     read MAIL_TEST
-    echo -n "Certbort Alert email: "
+    echo -n "$($GREEN)Certbort Alert email:$($_WHITE_) "
     read EMAIL_CERTBOT
 
     cat << EOF > 00_VARS
@@ -67,6 +67,9 @@ FQDN_collabora="$FQDN_collabora"
 MAIL_TEST="$MAIL_TEST"
 EMAIL_CERTBOT="$EMAIL_CERTBOT"
 EOF
+	
+    echo "$($_ORANGE_)File « 00_VARS » generated$($_WHITE_)"
+    echo ""
 
 fi
 
@@ -129,5 +132,8 @@ snap install lxd > /dev/null
 #apt-get install lxd/trusty-backports
 ##apt-get install lxd
 
-echo "$($_RED_)LXD is installed, please logout/login in bash to prevent snap bug and start script :$($_WHITE_)"
+echo "$($_GREEN_)LXD is installed$($_WHITE_)"
+echo ""
+echo "$($_RED_)Please logout/login in bash to prevent snap bug and start script :$($_WHITE_)"
 echo "$($_GREEN_)11_install_next.sh$($_WHITE_)"
+
