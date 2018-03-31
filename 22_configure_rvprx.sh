@@ -152,11 +152,11 @@ EOF
 lxc file push /tmp_lxd_rvprx_etc_nginx_rvprx-cloud rvprx/etc/nginx/sites-available/rvprx-cloud
 
 cat << EOF > /tmp_lxd_rvprx_etc_nginx_rvprx-collabora
-server {
-    listen      80;
-    server_name $FQDN_collabora;
-    return 301  https://$FQDN_collabora\$request_uri;
-}
+#server {
+#    listen      80;
+#    server_name $FQDN_collabora;
+#    return 301  https://$FQDN_collabora\$request_uri;
+#}
 
 server {
     listen      443 ssl;
@@ -174,7 +174,41 @@ server {
     access_log /var/log/nginx/collabora_access.log;
     error_log  /var/log/nginx/collabora_error.log;
 
-    location / { proxy_pass http://$IP_collabora_PRIV/; }
+    # static files
+    location ^~ /loleaflet {
+        proxy_pass https://$IP_collabora_PRIV:9980;
+        proxy_set_header Host \$http_host;
+    }
+
+    # WOPI discovery URL
+    location ^~ /hosting/discovery {
+        proxy_pass https://$IP_collabora_PRIV:9980;
+        proxy_set_header Host \$http_host;
+    }
+
+   # main websocket
+   location ~ ^/lool/(.*)/ws$ {
+       proxy_pass https://$IP_collabora_PRIV:9980;
+       proxy_set_header Upgrade \$http_upgrade;
+       proxy_set_header Connection "Upgrade";
+       proxy_set_header Host \$http_host;
+       proxy_read_timeout 36000s;
+   }
+   
+   # download, presentation and image upload
+   location ~ ^/lool {
+       proxy_pass https://$IP_collabora_PRIV:9980;
+       proxy_set_header Host \$http_host;
+   }
+   
+   # Admin Console websocket
+   location ^~ /lool/adminws {
+       proxy_pass https://$IP_collabora_PRIV:9980;
+       proxy_set_header Upgrade \$http_upgrade;
+       proxy_set_header Connection "Upgrade";
+       proxy_set_header Host \$http_host;
+       proxy_read_timeout 36000s;
+   }
 }
 EOF
 lxc file push /tmp_lxd_rvprx_etc_nginx_rvprx-collabora rvprx/etc/nginx/sites-available/rvprx-collabora
