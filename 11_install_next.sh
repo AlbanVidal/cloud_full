@@ -237,13 +237,13 @@ lxc exec smtp -- bash -c "echo Test SMTP $FQDN|mail -s 'Test SMTP $FQDN' $MAIL_T
 echo "$($_GREEN_)BEGIN rvprx$($_WHITE_)"
 echo "$($_ORANGE_)Update, upgrade and packages$($_WHITE_)"
 lxc exec rvprx -- bash -c 'echo "deb http://ftp.fr.debian.org/debian stretch-backports main" > /etc/apt/sources.list.d/stretch-backports.list'
-lxc exec rvprx -- apt-get update
+lxc exec rvprx -- apt-get update > /dev/null
 # Upgrade
-lxc exec rvprx -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
+lxc exec rvprx -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null"
 # Nginx - fail2ban
-lxc exec rvprx -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install vim nginx iptables fail2ban"
+lxc exec rvprx -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install vim nginx iptables fail2ban > /dev/null"
 # certbot for Nginx
-lxc exec rvprx -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install python3-certbot-nginx/stretch-backports"
+lxc exec rvprx -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install python3-certbot-nginx/stretch-backports > /dev/null"
 # conf file letsencrypt
 cat << EOF > /tmp_lxd_rvprx_etc_letsencrypt_cli.ini
 # Because we are using logrotate for greater flexibility, disable the
@@ -255,11 +255,16 @@ EOF
 lxc file push /tmp_lxd_rvprx_etc_letsencrypt_cli.ini rvprx/etc/letsencrypt/cli.ini
 
 # Generating certificates
-lxc exec rvprx -- bash -c "certbot certonly -n --agree-tos --email $EMAIL_CERTBOT --nginx -d $FQDN"
-lxc exec rvprx -- bash -c "certbot certonly -n --agree-tos --email $EMAIL_CERTBOT --nginx -d $FQDN_collabora"
+echo "$($_ORANGE_)Generating certificates: $FQDN$($_WHITE_)"
+lxc exec rvprx -- bash -c "certbot certonly -n --agree-tos --email $EMAIL_CERTBOT --nginx -d $FQDN > /dev/null"
+echo "$($_ORANGE_)Generating certificates: $FQDN_collabora$($_WHITE_)"
+lxc exec rvprx -- bash -c "certbot certonly -n --agree-tos --email $EMAIL_CERTBOT --nginx -d $FQDN_collabora > /dev/null"
 
 # RVPRX dhparam
+echo "$($_ORANGE_)Generating dhparam$($_WHITE_)"
 lxc exec rvprx -- bash -c "openssl dhparam -out /etc/nginx/dhparam.pem 4096"
+
+echo "$($_ORANGE_)Nginx: Conf, Vhosts and tuning$($_WHITE_)"
 
 # RVPRX common conf
 cat << 'EOF' > /tmp_lxd_rvprx_etc_nginx_RVPRX_common.conf
