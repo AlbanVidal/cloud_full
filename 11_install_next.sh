@@ -177,6 +177,9 @@ lxc file push /tmp/lxd_interfaces_smtp smtp/etc/network/interfaces
 lxc file push /tmp/lxd_resolv.conf smtp/etc/resolv.conf
 lxc restart smtp
 
+echo "$($_GREEN_)Waiting all containers correctly started (networking...) 5 seconds$($_WHITE_)"
+sleep 5
+
 ################################################################################
 #### CONTAINER CONFIGURATION
 echo ""
