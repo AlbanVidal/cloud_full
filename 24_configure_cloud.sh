@@ -63,6 +63,11 @@ MDP_nextcoud="$(cat /tmp/lxc_nextcloud_password)"
 
 echo "$($_GREEN_)BEGIN cloud$($_WHITE_)"
 
+echo "$($_ORANGE_)Create and attach /srv/data-cloud directory$($_WHITE_)"
+mkdir -p /srv/data-cloud
+chown 1000033:1000033 /srv/data-cloud
+lxc config device add cloud sharedCloud disk path=/srv/data-cloud source=/srv/data-cloud
+
 echo "$($_ORANGE_)Update, upgrade and packages$($_WHITE_)"
 lxc exec cloud -- apt-get update > /dev/null
 lxc exec cloud -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null"
@@ -143,8 +148,6 @@ lxc exec cloud -- bash -c "rm -f /tmp/nextcloud.tar.bz2"
 echo "$($_ORANGE_)Update directory privileges$($_WHITE_)"
 lxc exec cloud -- bash -c "
     chown -R www-data:www-data /var/www/nextcloud/
-    mkdir -p /srv/data
-    chown -R www-data:www-data /srv/data
     mkdir -p /var/log/nextcloud
     chown -R www-data:www-data /var/log/nextcloud
     "
@@ -196,7 +199,7 @@ echo "$($_ORANGE_)Reload apache2$($_WHITE_)"
 lxc exec cloud -- bash -c "systemctl reload apache2"
 
 echo "$($_ORANGE_)Nextcloud installation$($_WHITE_)"
-lxc exec cloud -- bash -c "occ maintenance:install --database 'mysql' --database-host '$IP_mariadb_PRIV' --database-name 'nextcloud'  --database-user 'nextcloud' --database-pass '$MDP_nextcoud' --admin-user 'admincloud' --admin-pass '$MDP_admincloud' --data-dir='/srv/data'"
+lxc exec cloud -- bash -c "occ maintenance:install --database 'mysql' --database-host '$IP_mariadb_PRIV' --database-name 'nextcloud'  --database-user 'nextcloud' --database-pass '$MDP_nextcoud' --admin-user 'admincloud' --admin-pass '$MDP_admincloud' --data-dir='/srv/data-cloud'"
 
 echo "$($_ORANGE_)Tune Nextcloud conf$($_WHITE_)"
 lxc exec cloud -- bash -c "occ config:system:set trusted_domains 0 --value='$FQDN'
