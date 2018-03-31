@@ -53,6 +53,14 @@ _ORANGE_="tput setaf 3"
 ################################################################################
 
 #### MariaDB
+
+# Test if Nextcloud database password is set
+if [ ! -f /tmp/lxc_nextcloud_password ] ; then
+    echo "$($_RED_)You need to create « /tmp/lxc_nextcloud_password » with nextcloud user passord$($_WHITE_)"
+    exit 1
+fi
+MDP_nextcoud="$(cat /tmp/lxc_nextcloud_password)"
+
 echo "$($_GREEN_)BEGIN mariadb$($_WHITE_)"
 echo "$($_ORANGE_)Update, upgrade and packages$($_WHITE_)"
 lxc exec mariadb -- apt-get update > /dev/null
@@ -87,11 +95,6 @@ lxc exec mariadb -- bash -c "/tmp/lxd_mariadb_secure_installation"
 # Create nextcloud database and user
 
 echo "$($_ORANGE_)Create nextcloud database and user$($_WHITE_)"
-if [ ! -f /tmp/lxc_nextcloud_password ] ; then
-    echo "$($_RED_)You need to create « /tmp/lxc_nextcloud_password » with nextcloud user passord$($_WHITE_)"
-    exit 1
-fi
-MDP_nextcoud="$(cat /tmp/lxc_nextcloud_password)"
 cat << EOF > /tmp/lxd_mariadb_create_database_and_user
 #!/bin/bash
 mysql <<< '
