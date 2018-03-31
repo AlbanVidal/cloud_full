@@ -84,6 +84,7 @@ networks:
 
 # Profiles
 profiles:
+
 - name: default
   description: "Default Net and storage"
   devices:
@@ -96,6 +97,7 @@ profiles:
       path: /
       pool: default
       type: disk
+
 - name: privNet
   description: "Internal (backend) Network"
   devices:
@@ -104,16 +106,37 @@ profiles:
       nictype: bridged
       parent: lxdbrINT
       type: nic
-- name: 1c1024m
-  description: "1 CPU and 1024MB RAM"
-  config:
-    limits.memory: 1GB
-    limits.cpu: "1"
+
 - name: 1c256m
   description: "1 CPU and 256MB RAM"
   config:
     limits.memory: 256MB
     limits.cpu: "1"
+
+- name: 1c512m
+  description: "1 CPU and 512MB RAM"
+  config:
+    limits.memory: 512MB
+    limits.cpu: "1"
+
+- name: 1c1024m
+  description: "1 CPU and 1GB RAM"
+  config:
+    limits.memory: 1GB
+    limits.cpu: "1"
+
+- name: 1c2048m
+  description: "1 CPU and 2GB RAM"
+  config:
+    limits.memory: 2GB
+    limits.cpu: "1"
+
+- name: 2c2048m
+  description: "2 CPU and 2GB RAM"
+  config:
+    limits.memory: 2GB
+    limits.cpu: "2"
+
 EOF
 
 # TEMPLATE interfaces containers
@@ -139,7 +162,7 @@ EOF
 
 # CT 1 - CLOUD
 echo "$($_ORANGE_)LXD create container: cloud$($_WHITE_)"
-lxc launch images:debian/stretch cloud --profile default --profile privNet --profile 1c256m
+lxc launch images:debian/stretch cloud --profile default --profile privNet --profile 1c512m
 sed -e "s/_IP_PUB_/$IP_cloud/" -e "s/_IP_PRIV_/$IP_cloud_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_cloud
 lxc file push /tmp/lxd_interfaces_cloud cloud/etc/network/interfaces
 lxc file push /tmp/lxd_resolv.conf cloud/etc/resolv.conf
