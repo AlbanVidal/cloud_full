@@ -70,7 +70,7 @@ lxc exec cloud -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install vim
 echo "$($_ORANGE_)Create « occ » alias command$($_WHITE_)"
 lxc exec cloud -- bash -c 'echo "sudo -u www-data php /var/www/nextcloud/occ $@" > /usr/local/bin/occ'
 
-echo -n "$($_GREEN_)Please enter a password for nextcloud admin « admincloud » : $($_WHITE_)"
+echo "$($_GREEN_)Please enter a password for nextcloud admin « admincloud » : $($_WHITE_)"
 read -rs MDP_admincloud
 
 echo "$($_ORANGE_)Install packages for nextcloud...$($_WHITE_)"
