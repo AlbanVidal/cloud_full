@@ -59,3 +59,32 @@ lxc exec collabora -- apt-get update > /dev/null
 lxc exec collabora -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null"
 lxc exec collabora -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install vim apt-utils > /dev/null"
  
+echo "$($_ORANGE_)Add Docker repo and install Docker$($_WHITE_)"
+lxc exec collabora -- bash -c "apt-get -y install apt-transport-https gnupg gnupg2 gnupg1 > /dev/null
+                               curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
+                               echo -e '\n# Depôt Docker\ndeb [arch=amd64] https://download.docker.com/linux/debian stretch stable' > /etc/apt/sources.list.d/docker.list
+                               apt-get update > /dev/null
+                               apt-get -y install docker-ce > /dev/null
+                               "
+
+echo "$($_ORANGE_)Tuning Docker for Debian$($_WHITE_)"
+lxc exec collabora -- bash -c "mkdir /etc/systemd/system/docker.service.d
+                               cat << EOF > /etc/systemd/system/docker.service.d/DeviceMapper.conf
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd --storage-driver=devicemapper -H fd://
+EOF
+"
+
+echo "$($_ORANGE_)Restart Docker$($_WHITE_)"
+lxc exec collabora -- bash -c "systemctl daemon-reload
+                               systemctl restart docker
+                               "
+
+echo "$($_ORANGE_)pull collabora$($_WHITE_)"
+lxc exec collabora -- bash -c "docker pull collabora/code"
+
+# Need to add two « \ » between « . »
+DOMAIN=$(echo $FQDN| sed 's#\.#\\\\.#g')
+lxc exec collabora -- bash -c "docker run -t -d -p $IP_collabora_PRIV:9980:9980 -e 'domain=$DOMAIN' --restart always --cap-add MKNOD collabora/code"
+
