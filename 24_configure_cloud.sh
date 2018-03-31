@@ -68,7 +68,7 @@ lxc exec cloud -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /
 lxc exec cloud -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install vim apt-utils > /dev/null"
  
 echo "$($_ORANGE_)Create « occ » alias command$($_WHITE_)"
-lxc exec cloud -- bash -c 'echo "sudo -u www-data php /var/www/nextcloud/occ $@" > /usr/local/bin/occ
+lxc exec cloud -- bash -c 'echo "sudo -u www-data php /var/www/nextcloud/occ \$@" > /usr/local/bin/occ
                            chmod +x /usr/local/bin/occ
                            '
 
@@ -187,7 +187,7 @@ echo "$($_ORANGE_)Reload apache2$($_WHITE_)"
 lxc exec cloud -- bash -c "systemctl reload apache2"
 
 echo "$($_ORANGE_)Nextcloud installation$($_WHITE_)"
-lxc exec cloud -- bash -c "sudo -u www-data php /var/www/nextcloud/occ maintenance:install --database 'mysql' --database-host '$IP_mariadb_PRIV' --database-name 'nextcloud'  --database-user 'nextcloud' --database-pass '$MDP_nextcoud' --admin-user 'admincloud' --admin-pass '$MDP_admincloud' --data-dir='/srv/data'"
+lxc exec cloud -- bash -c "occ maintenance:install --database 'mysql' --database-host '$IP_mariadb_PRIV' --database-name 'nextcloud'  --database-user 'nextcloud' --database-pass '$MDP_nextcoud' --admin-user 'admincloud' --admin-pass '$MDP_admincloud' --data-dir='/srv/data'"
 
 echo "$($_ORANGE_)Tune Nextcloud conf$($_WHITE_)"
 lxc exec cloud -- bash -c "occ config:system:set trusted_domains 0 --value='$FQDN'
