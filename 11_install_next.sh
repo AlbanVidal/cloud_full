@@ -88,6 +88,7 @@ profiles:
   description: "Default Net and storage"
   devices:
     ethPublic:
+      name: ethPublic
       nictype: bridged
       parent: lxdbrEXT
       type: nic
@@ -99,6 +100,7 @@ profiles:
   description: "Internal (backend) Network"
   devices:
     ethPrivate:
+      name: ethPrivate
       nictype: bridged
       parent: lxdbrINT
       type: nic
@@ -211,9 +213,9 @@ inet_interfaces = 127.0.0.1, _IP_SMTP_
 inet_protocols = ipv4
 EOF
 sed -i                                         \
-    -e "s/_myhostname_/$FQDN/"                 \
-    -e "s/_PRIVATE_NETWORK_/$PRIVATE_NETWORK/" \
-    -e "s/_IP_SMTP_/$IP_smtp_PRIV/"            \
+    -e "s#_myhostname_#$FQDN#"                 \
+    -e "s#_PRIVATE_NETWORK_#$PRIVATE_NETWORK#" \
+    -e "s#_IP_SMTP_#$IP_smtp_PRIV#"            \
     /tmp_lxd_smtp_etc_postfix_main.cf
 lxc file push /tmp_lxd_smtp_etc_postfix_main.cf smtp/etc/postfix/main.cf
 lxc exec smtp -- bash -c "echo $FQDN > /etc/mailname"
