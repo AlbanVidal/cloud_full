@@ -58,9 +58,13 @@ echo "$($_ORANGE_)Update, upgrade and packages$($_WHITE_)"
 lxc exec mariadb -- apt-get update > /dev/null
 lxc exec mariadb -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null"
 lxc exec mariadb -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install vim apt-utils > /dev/null"
- 
+
+# Install MariaDB serveur
+
 echo "$($_ORANGE_)Install MariaDB serveur$($_WHITE_)"
 lxc exec mariadb -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install mariadb-server > /dev/null"
+
+# Secure MariaDB (like mysql_secure_installation
 
 echo "$($_ORANGE_)Secure MariaDB (like mysql_secure_installation)$($_WHITE_)"
 cat << EOF > /tmp/lxd_mariadb_secure_installation
@@ -78,9 +82,15 @@ mysql -e "FLUSH PRIVILEGES"
 EOF
 
 lxc file push --mode 500 /tmp/lxd_mariadb_secure_installation mariadb/tmp/lxd_mariadb_secure_installation
-exec mariadb -- bash -c "/tmp/lxd_mariadb_secure_installation"
+lxc exec mariadb -- bash -c "/tmp/lxd_mariadb_secure_installation"
+
+# Create nextcloud database and user
 
 echo "$($_ORANGE_)Create nextcloud database and user$($_WHITE_)"
+if [ ! -f /tmp/lxc_nextcloud_password ] ; then
+    echo "$($_RED_)You need to create « /tmp/lxc_nextcloud_password » with nextcloud user passord$($_WHITE_)"
+    exit 1
+fi
 MDP_nextcoud="$(cat /tmp/lxc_nextcloud_password)"
 cat << EOF > /tmp/lxd_mariadb_create_database_and_user
 #!/bin/bash
@@ -90,4 +100,7 @@ mysql <<< '
     FLUSH PRIVILEGES;
 '
 EOF
+
+lxc file push --mode 500 /tmp/lxd_mariadb_create_database_and_user mariadb/tmp/lxd_mariadb_create_database_and_user
+lxc exec mariadb -- bash -c "/tmp/lxd_mariadb_create_database_and_user"
 
