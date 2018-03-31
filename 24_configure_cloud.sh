@@ -144,7 +144,7 @@ lxc exec cloud -- bash -c 'cat << "EOF" > /etc/apache2/sites-available/nextcloud
 <VirtualHost *:80>
     ServerName __FQDN__
 
-    ServerAdmin webmaster@zordhak.fr
+    ServerAdmin __MAIL_ADMIN__
     DocumentRoot /var/www/nextcloud
 
     # Autorisation des réécritures
@@ -173,7 +173,7 @@ lxc exec cloud -- bash -c 'cat << "EOF" > /etc/apache2/sites-available/nextcloud
 EOF'
 
 echo "$($_ORANGE_)Update FQDN$($_WHITE_)"
-lxc exec cloud -- bash -c "sed -i 's/__FQDN__/$FQDN/' /etc/apache2/sites-available/nextcloud.conf"
+lxc exec cloud -- bash -c "sed -i -e 's/__FQDN__/$FQDN/' -e 's/__MAIL_ADMIN__/$EMAIL_CERTBOT/' /etc/apache2/sites-available/nextcloud.conf"
 
 echo "$($_ORANGE_)Enable Vhost « nextcloud »$($_WHITE_)"
 lxc exec cloud -- bash -c "a2ensite nextcloud.conf > /dev/null"
@@ -185,7 +185,7 @@ echo "$($_ORANGE_)Reload apache2$($_WHITE_)"
 lxc exec cloud -- bash -c "systemctl reload apache2"
 
 echo "$($_ORANGE_)Nextcloud installation$($_WHITE_)"
-lxc exec cloud -- bash -c "occ maintenance:install --database 'mysql' --database-name 'nextcloud'  --database-user 'nextcloud' --database-pass '$MDP_nextcoud' --admin-user 'admincloud' --admin-pass '$MDP_admincloud' --data-dir='/srv/data'"
+lxc exec cloud -- bash -c "occ maintenance:install --database 'mysql' --database-host '$IP_mariadb_PRIV' --database-name 'nextcloud'  --database-user 'nextcloud' --database-pass '$MDP_nextcoud' --admin-user 'admincloud' --admin-pass '$MDP_admincloud' --data-dir='/srv/data'"
 
 echo "$($_ORANGE_)Tune Nextcloud conf$($_WHITE_)"
 lxc exec cloud -- bash -c "occ config:system:set trusted_domains 0 --value='$FQDN'
