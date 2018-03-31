@@ -170,7 +170,7 @@ lxc restart cloud
 
 # CT 2 - COLLABORA
 echo "$($_ORANGE_)LXD create container: collabora$($_WHITE_)"
-lxc launch images:debian/stretch collabora --profile default --profile privNet --profile 1c256m
+lxc launch images:debian/stretch collabora --profile default --profile privNet --profile 1c512m
 sed -e "s/_IP_PUB_/$IP_collabora/" -e "s/_IP_PRIV_/$IP_collabora_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_collabora
 lxc file push /tmp/lxd_interfaces_collabora collabora/etc/network/interfaces
 lxc file push /tmp/lxd_resolv.conf collabora/etc/resolv.conf
