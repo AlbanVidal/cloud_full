@@ -75,7 +75,7 @@ networks:
     ipv6.address: none
 
 - name: lxdbrINT
-    type: bridge
+  type: bridge
   config:
     ipv4.address: none
     ipv4.nat: "false"
