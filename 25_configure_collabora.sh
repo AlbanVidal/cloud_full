@@ -67,19 +67,20 @@ lxc exec collabora -- bash -c "apt-get -y install curl apt-transport-https gnupg
                                apt-get -y install docker-ce > /dev/null
                                "
 
-echo "$($_ORANGE_)Tuning Docker for Debian$($_WHITE_)"
-lxc exec collabora -- bash -c "mkdir /etc/systemd/system/docker.service.d
-                               cat << EOF > /etc/systemd/system/docker.service.d/DeviceMapper.conf
-[Service]
-ExecStart=
-ExecStart=/usr/bin/dockerd --storage-driver=devicemapper -H fd://
-EOF
-"
-
-echo "$($_ORANGE_)Restart Docker$($_WHITE_)"
-lxc exec collabora -- bash -c "systemctl daemon-reload
-                               systemctl restart docker
-                               "
+# NOT IN LXD CONTAINER
+#echo "$($_ORANGE_)Tuning Docker for Debian$($_WHITE_)"
+#lxc exec collabora -- bash -c "mkdir /etc/systemd/system/docker.service.d
+#                               cat << EOF > /etc/systemd/system/docker.service.d/DeviceMapper.conf
+#[Service]
+#ExecStart=
+#ExecStart=/usr/bin/dockerd --storage-driver=devicemapper -H fd://
+#EOF
+#"
+#
+#echo "$($_ORANGE_)Restart Docker$($_WHITE_)"
+#lxc exec collabora -- bash -c "systemctl daemon-reload
+#                               systemctl restart docker
+#                               "
 
 echo "$($_ORANGE_)pull collabora$($_WHITE_)"
 lxc exec collabora -- bash -c "docker pull collabora/code"
