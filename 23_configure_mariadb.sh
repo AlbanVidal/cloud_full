@@ -104,3 +104,12 @@ EOF
 lxc file push --mode 500 /tmp/lxd_mariadb_create_database_and_user mariadb/tmp/lxd_mariadb_create_database_and_user
 lxc exec mariadb -- bash -c "/tmp/lxd_mariadb_create_database_and_user"
 
+# Change MariaDB Bind Address
+
+echo "$($_ORANGE_)Change MariaDB Bind Address$($_WHITE_)"
+
+lxc exec mariadb -- bash -c "sed -i 's/bind-address.*/bind-address = $IP_mariadb_PRIV/' /etc/mysql/mariadb.conf.d/50-server.cnf"
+
+echo "$($_ORANGE_)Restart MariaDB$($_WHITE_)"
+lxc exec mariadb -- bash -c "systemctl restart mariadb"
+
