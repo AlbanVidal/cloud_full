@@ -13,7 +13,7 @@ IP_smtp="172.16.0.6"
 #
 # Internal Network (Private)
 IP_cloud_PRIV="172.17.0.2"
-IP_collabora_PRIV="172.31.0.3"
+IP_collabora_PRIV="172.17.0.3"
 IP_mariadb_PRIV="172.17.0.4"
 IP_rvprx_PRIV="172.17.0.5"
 IP_smtp_PRIV="172.17.0.6"
