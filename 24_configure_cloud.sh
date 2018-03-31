@@ -86,13 +86,17 @@ lxc exec cloud -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install \
     php7.0 php7.0-fpm php7.0-simplexml php-mysql php-gd php-zip php-mbstring php-curl php-redis php7.0-bz2 php7.0-intl php7.0-mcrypt php7.0-gmp \
     > /dev/null"
 
+echo "$($_ORANGE_)apache2 FIX ServerName$($_WHITE_)"
+lxc exec cloud -- bash -c "echo 'ServerName $FQDN' > /etc/apache2/conf-available/99_ServerName.conf
+                           a2enconf 99_ServerName"
+
 echo "$($_ORANGE_)Enable php7-fpm in apache2$($_WHITE_)"
-lxc exec cloud -- bash -c "a2enmod proxy_fcgi setenvif > /dev/null"
-lxc exec cloud -- bash -c "a2enconf php7.0-fpm > /dev/null"
+lxc exec cloud -- bash -c "a2enmod proxy_fcgi setenvif > /dev/null
+                           a2enconf php7.0-fpm > /dev/null"
 
 echo "$($_ORANGE_)Enable apache2 mods$($_WHITE_)"
-lxc exec cloud -- bash -c "a2enmod rewrite > /dev/null"
-lxc exec cloud -- bash -c "a2enmod headers env dir mime > /dev/null"
+lxc exec cloud -- bash -c "a2enmod rewrite > /dev/null
+                           a2enmod headers env dir mime > /dev/null"
 
 echo "$($_ORANGE_)Tuning opcache (php7) conf$($_WHITE_)"
 lxc exec cloud -- bash -c "sed -i                                                                              \
@@ -126,6 +130,9 @@ else
 fi'
 
 lxc exec cloud -- bash -c "rm -f /var/www/html/phpinfo.php"
+
+echo "$($_ORANGE_)apache2 listen only in Private IP$($_WHITE_)"
+lxc exec cloud -- bash -c "echo 'Listen $IP_cloud_PRIV:80' > /etc/apache2/ports.conf"
 
 echo "$($_ORANGE_)Download and uncompress Nextcloud$($_WHITE_)"
 lxc exec cloud -- bash -c "wget -q https://download.nextcloud.com/server/releases/nextcloud-13.0.1.tar.bz2 -O /tmp/nextcloud.tar.bz2"
