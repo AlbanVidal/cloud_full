@@ -11,13 +11,16 @@ else
     > 00_VARS
     echo "Please reply to the next questions"
     echo ""
-    echo -n "FQDN : "
+    echo -n "FQDN: "
     read FQDN
     echo $FQDN >> 00_VARS
+    echo -n "Collabora FQDN: "
     read FQDN_collabora
     echo $FQDN_collabora >> 00_VARS
+    echo "Test email (to test Postfix after conf): "
     read MAIL_TEST
     echo $MAIL_TEST >> 00_VARS
+    echo "Certbort Alert email: "
     read EMAIL_CERTBOT
     echo $EMAIL_CERTBOT >> 00_VARS
 fi
