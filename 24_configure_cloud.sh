@@ -63,14 +63,6 @@ MDP_nextcoud="$(cat /tmp/lxc_nextcloud_password)"
 
 echo "$($_GREEN_)BEGIN cloud$($_WHITE_)"
 
-echo "$($_GREEN_)Edit container security to enable Docker (nesting and privileged)$($_WHITE_)"
-lxc config set collabora security.privileged true
-lxc config set collabora security.nesting true
-lxc stop collabora
-lxc start collabora
-# wait 5 sec for Network
-sleep 5
-
 echo "$($_ORANGE_)Update, upgrade and packages$($_WHITE_)"
 lxc exec cloud -- apt-get update > /dev/null
 lxc exec cloud -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null"

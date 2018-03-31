@@ -54,6 +54,19 @@ _ORANGE_="tput setaf 3"
 
 #### COLLABORA
 echo "$($_GREEN_)BEGIN collabora$($_WHITE_)"
+
+echo "$($_GREEN_)Edit container security to enable Docker (nesting and privileged)$($_WHITE_)"
+# Container privilegied
+lxc config set collabora security.privileged true
+# Enable nesting (Docker in LXD)
+lxc config set collabora security.nesting true
+# Disable apparmor
+lxc config set collabora raw.lxc lxc.aa_profile=unconfined
+lxc restart collabora
+# wait 5 sec for Network
+sleep 5
+
+
 echo "$($_ORANGE_)Update, upgrade and packages$($_WHITE_)"
 lxc exec collabora -- apt-get update > /dev/null
 lxc exec collabora -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null"
