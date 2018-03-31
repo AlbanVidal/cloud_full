@@ -230,3 +230,11 @@ lxc exec cloud -- bash -c "occ app:install calendar
                            occ app:enable  announcementcenter
                            "
 
+echo "$($_ORANGE_)configure SMTP in Nextcloud$($_WHITE_)"
+lxc exec cloud -- bash -c "occ config:system:set mail_smtpmode --value='smtp'
+                           occ config:system:set mail_smtpauthtype --value='LOGIN'
+                           occ config:system:set mail_from_address --value='cloud'
+                           occ config:system:set mail_domain --value='$FQDN'
+                           occ config:system:set mail_smtphost --value='$IP_smtp_PRIV'
+                           occ config:system:set mail_smtpport --value='25'
+                           "
