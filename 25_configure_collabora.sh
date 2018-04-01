@@ -100,5 +100,5 @@ lxc exec collabora -- bash -c "docker pull collabora/code"
 
 # Need to add two « \ » between « . »
 DOMAIN=$(echo $FQDN| sed 's#\.#\\\\.#g')
-lxc exec collabora -- bash -c "docker run -t -d -p $IP_collabora_PRIV:9980:9980 -e 'domain=$DOMAIN' --restart always --cap-add MKNOD collabora/code"
+lxc exec collabora -- bash -c "docker run -t -d -p 9980:9980 -e 'domain=$DOMAIN' --restart always --cap-add MKNOD collabora/code"
 
