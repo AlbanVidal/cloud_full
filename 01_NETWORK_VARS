@@ -4,21 +4,21 @@
 CIDR=24
 #
 # External Network (Internet)
-IP_LXD="172.16.0.1"
-IP_cloud="172.16.0.2"
-IP_collabora="172.16.0.3"
-IP_mariadb="172.16.0.4"
-IP_rvprx="172.16.0.5"
-IP_smtp="172.16.0.6"
+IP_LXD="192.168.100.1"
+IP_cloud="192.168.100.2"
+IP_collabora="192.168.100.3"
+IP_mariadb="192.168.100.4"
+IP_rvprx="192.168.100.5"
+IP_smtp="192.168.100.6"
 #
 # Internal Network (Private)
-IP_cloud_PRIV="172.17.0.2"
-IP_collabora_PRIV="172.17.0.3"
-IP_mariadb_PRIV="172.17.0.4"
-IP_rvprx_PRIV="172.17.0.5"
-IP_smtp_PRIV="172.17.0.6"
+IP_cloud_PRIV="192.168.200.2"
+IP_collabora_PRIV="192.168.200.3"
+IP_mariadb_PRIV="192.168.200.4"
+IP_rvprx_PRIV="192.168.200.5"
+IP_smtp_PRIV="192.168.200.6"
 #
 # Private Network (for Postfix)
-PRIVATE_NETWORK="172.17.0.0/24"
+PRIVATE_NETWORK="192.168.200.0/24"
 #
 ################################################################################
