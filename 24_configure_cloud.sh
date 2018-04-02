@@ -78,9 +78,6 @@ lxc exec cloud -- bash -c 'echo "sudo -u www-data php /var/www/nextcloud/occ \$@
                            chmod +x /usr/local/bin/occ
                            '
 
-echo "$($_GREEN_)Please enter a password for nextcloud admin « admincloud » : $($_WHITE_)"
-read -rs MDP_admincloud
-
 echo "$($_ORANGE_)Install packages for nextcloud...$($_WHITE_)"
 lxc exec cloud -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install \
     wget            \
@@ -199,7 +196,7 @@ echo "$($_ORANGE_)Reload apache2$($_WHITE_)"
 lxc exec cloud -- bash -c "systemctl reload apache2"
 
 echo "$($_ORANGE_)Nextcloud installation$($_WHITE_)"
-lxc exec cloud -- bash -c "occ maintenance:install --database 'mysql' --database-host '$IP_mariadb_PRIV' --database-name 'nextcloud'  --database-user 'nextcloud' --database-pass '$MDP_nextcoud' --admin-user 'admincloud' --admin-pass '$MDP_admincloud' --data-dir='/srv/data-cloud'"
+lxc exec cloud -- bash -c "occ maintenance:install --database 'mysql' --database-host '$IP_mariadb_PRIV' --database-name 'nextcloud'  --database-user 'nextcloud' --database-pass '$MDP_nextcoud' --admin-user '$NEXTCLOUD_admin_user' --admin-pass '$NEXTCLOUD_admin_password' --data-dir='/srv/data-cloud'"
 
 echo "$($_ORANGE_)Tune Nextcloud conf$($_WHITE_)"
 lxc exec cloud -- bash -c "occ config:system:set trusted_domains 0 --value='$FQDN'
@@ -226,12 +223,14 @@ lxc exec cloud -- bash -c "occ maintenance:update:htaccess > /dev/null"
 
 echo "$($_ORANGE_)Install app in Nextcloud$($_WHITE_)"
 lxc exec cloud -- bash -c "occ app:install calendar
-                           occ app:enable calendar
+                           occ app:enable  calendar
                            occ app:enable  admin_audit
                            occ app:install contacts
                            occ app:enable  contacts
                            occ app:install announcementcenter
                            occ app:enable  announcementcenter
+                           occ app:install richdocuments
+                           occ app:enable  richdocuments
                            "
 
 echo "$($_ORANGE_)configure SMTP in Nextcloud$($_WHITE_)"

@@ -60,6 +60,10 @@ else
     read MAIL_TEST
     echo -n "$($GREEN)Certbort Alert email:$($_WHITE_) "
     read EMAIL_CERTBOT
+    echo -n "$($GREEN)Nextcloud Admin User:$($_WHITE_) "
+    read NEXTCLOUD_admin_user
+    echo -n "$($GREEN)Nextcloud Admin Password:$($_WHITE_) "
+    read -rs NEXTCLOUD_admin_password
 
     cat << EOF > 00_VARS
 FQDN="$FQDN"
