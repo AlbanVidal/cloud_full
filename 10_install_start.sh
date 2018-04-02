@@ -62,7 +62,7 @@ else
     read EMAIL_CERTBOT
     echo -n "$($_GREEN_)Nextcloud Admin User:$($_WHITE_) "
     read NEXTCLOUD_admin_user
-    echo -n "$($_GREEN_)Nextcloud Admin Password:$($_WHITE_) "
+    echo -n "$($_GREEN_)Nextcloud Admin Password (hidden entry):$($_WHITE_) "
     read -rs NEXTCLOUD_admin_password
 
     cat << EOF > 00_VARS
