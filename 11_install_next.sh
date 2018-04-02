@@ -62,7 +62,7 @@ config:
 # Storage pools
 storage_pools:
 - name: default
-  driver: dir
+  driver: btrfs
 
 # Network devices
 networks:

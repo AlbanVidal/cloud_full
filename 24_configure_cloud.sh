@@ -91,7 +91,7 @@ lxc exec cloud -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install \
 
 echo "$($_ORANGE_)apache2 FIX ServerName$($_WHITE_)"
 lxc exec cloud -- bash -c "echo 'ServerName $FQDN' > /etc/apache2/conf-available/99_ServerName.conf
-                           a2enconf 99_ServerName"
+                           a2enconf 99_ServerName > /dev/null"
 
 echo "$($_ORANGE_)Enable php7-fpm in apache2$($_WHITE_)"
 lxc exec cloud -- bash -c "a2enmod proxy_fcgi setenvif > /dev/null

@@ -52,17 +52,17 @@ else
     echo "$($_RED_)File « 00_VARS » don't exist$($_WHITE_)"
     echo "$($_ORANGE_)Please reply to the next questions$($_WHITE_)"
     echo ""
-    echo -n "$($GREEN)FQDN:$($_WHITE_) "
+    echo -n "$($_GREEN_)FQDN:$($_WHITE_) "
     read FQDN
-    echo -n "$($GREEN)Collabora FQDN:$($_WHITE_) "
+    echo -n "$($_GREEN_)Collabora FQDN:$($_WHITE_) "
     read FQDN_collabora
-    echo -n "$($GREEN)Test email (to test Postfix after conf):$($_WHITE_) "
+    echo -n "$($_GREEN_)Test email (to test Postfix after conf):$($_WHITE_) "
     read MAIL_TEST
-    echo -n "$($GREEN)Certbort Alert email:$($_WHITE_) "
+    echo -n "$($_GREEN_)Certbort Alert email:$($_WHITE_) "
     read EMAIL_CERTBOT
-    echo -n "$($GREEN)Nextcloud Admin User:$($_WHITE_) "
+    echo -n "$($_GREEN_)Nextcloud Admin User:$($_WHITE_) "
     read NEXTCLOUD_admin_user
-    echo -n "$($GREEN)Nextcloud Admin Password:$($_WHITE_) "
+    echo -n "$($_GREEN_)Nextcloud Admin Password:$($_WHITE_) "
     read -rs NEXTCLOUD_admin_password
 
     cat << EOF > 00_VARS
@@ -70,8 +70,11 @@ FQDN="$FQDN"
 FQDN_collabora="$FQDN_collabora"
 MAIL_TEST="$MAIL_TEST"
 EMAIL_CERTBOT="$EMAIL_CERTBOT"
+NEXTCLOUD_admin_user="$NEXTCLOUD_admin_user"
+NEXTCLOUD_admin_password="$NEXTCLOUD_admin_password"
 EOF
-	
+
+    echo ""
     echo "$($_ORANGE_)File « 00_VARS » generated$($_WHITE_)"
     echo ""
 
@@ -125,8 +128,8 @@ EOF
 sysctl -p /etc/sysctl.d/81-disable-ipv6.conf
 
 ##### DEBIAN
-echo "$($_ORANGE_)Install: snapd udev and LXD with snapd$($_WHITE_)"
-DEBIAN_FRONTEND=noninteractive apt-get -y install snapd udev > /dev/null
+echo "$($_ORANGE_)Install: snapd, udev, btrfs-tools and LXD with snapd$($_WHITE_)"
+DEBIAN_FRONTEND=noninteractive apt-get -y install snapd udev btrfs-tools > /dev/null
 DEBIAN_FRONTEND=noninteractive apt-get clean
 snap install lxd > /dev/null
 
