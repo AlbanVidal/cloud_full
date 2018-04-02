@@ -116,3 +116,14 @@ lxc exec mariadb -- bash -c "sed -i 's/bind-address.*/bind-address = $IP_mariadb
 echo "$($_ORANGE_)Restart MariaDB$($_WHITE_)"
 lxc exec mariadb -- bash -c "systemctl restart mariadb"
 
+################################################################################
+
+echo "$($_ORANGE_)Clean package cache (.deb files)$($_WHITE_)"
+lxc exec mariadb -- bash -c "apt-get clean"
+
+echo "$($_ORANGE_)Reboot container to free memory$($_WHITE_)"
+lxc restart mariadb
+
+echo "$($_GREEN_)END mariadb$($_WHITE_)"
+echo ""
+

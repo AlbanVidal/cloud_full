@@ -241,3 +241,15 @@ lxc exec cloud -- bash -c "occ config:system:set mail_smtpmode --value='smtp'
                            occ config:system:set mail_smtphost --value='$IP_smtp_PRIV'
                            occ config:system:set mail_smtpport --value='25'
                            "
+
+################################################################################
+
+echo "$($_ORANGE_)Clean package cache (.deb files)$($_WHITE_)"
+lxc exec cloud -- bash -c "apt-get clean"
+
+echo "$($_ORANGE_)Reboot container to free memory$($_WHITE_)"
+lxc restart cloud
+
+echo "$($_GREEN_)END cloud$($_WHITE_)"
+echo ""
+

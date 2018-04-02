@@ -102,3 +102,14 @@ lxc exec collabora -- bash -c "docker pull collabora/code"
 DOMAIN=$(echo $FQDN| sed 's#\.#\\\\.#g')
 lxc exec collabora -- bash -c "docker run -t -d -p 9980:9980 -e 'domain=$DOMAIN' --restart always --cap-add MKNOD collabora/code"
 
+################################################################################
+
+echo "$($_ORANGE_)Clean package cache (.deb files)$($_WHITE_)"
+lxc exec collabora -- bash -c "apt-get clean"
+
+echo "$($_ORANGE_)Reboot container to free memory$($_WHITE_)"
+lxc restart collabora
+
+echo "$($_GREEN_)END collabora$($_WHITE_)"
+echo ""
+

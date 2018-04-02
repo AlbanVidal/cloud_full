@@ -98,8 +98,19 @@ sed -i                                         \
     /tmp_lxd_smtp_etc_postfix_main.cf
 
 lxc file push /tmp_lxd_smtp_etc_postfix_main.cf smtp/etc/postfix/main.cf
-lxc exec smtp -- bash -c "echo $FQDN > /etc/mailname"
-lxc exec smtp -- systemctl restart postfix
-lxc exec smtp -- bash -c "echo Test SMTP $FQDN|mail -s 'Test SMTP $FQDN' $MAIL_TEST"
+lxc exec smtp -- bash -c "echo $FQDN > /etc/mailname
+                          systemctl restart postfix
+                          echo Test SMTP $FQDN|mail -s 'Test SMTP $FQDN' $MAIL_TEST
+                          "
 
+################################################################################
+
+echo "$($_ORANGE_)Clean package cache (.deb files)$($_WHITE_)"
+lxc exec smtp -- bash -c "apt-get clean"
+
+echo "$($_ORANGE_)Reboot container to free memory$($_WHITE_)"
+lxc restart smtp
+
+echo "$($_GREEN_)END smtp$($_WHITE_)"
+echo ""
 

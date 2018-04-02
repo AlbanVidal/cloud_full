@@ -227,3 +227,14 @@ lxc exec rvprx -- nginx -s reload
 
 ## >> FAIL2BAN <<
  
+################################################################################
+
+echo "$($_ORANGE_)Clean package cache (.deb files)$($_WHITE_)"
+lxc exec rvprx -- bash -c "apt-get clean"
+
+echo "$($_ORANGE_)Reboot container to free memory$($_WHITE_)"
+lxc restart rvprx
+
+echo "$($_GREEN_)END rvprx$($_WHITE_)"
+echo ""
+
