@@ -75,9 +75,9 @@ lxc file push /tmp_lxd_rvprx_etc_letsencrypt_cli.ini rvprx/etc/letsencrypt/cli.i
 
 # Generating certificates
 echo "$($_ORANGE_)Generating certificates: $FQDN$($_WHITE_)"
-lxc exec rvprx -- bash -c "certbot certonly -n --agree-tos --email $EMAIL_CERTBOT --nginx -d $FQDN > /dev/null"
-echo "$($_ORANGE_)Generating certificates: $FQDN_collabora$($_WHITE_)"
-lxc exec rvprx -- bash -c "certbot certonly -n --agree-tos --email $EMAIL_CERTBOT --nginx -d $FQDN_collabora > /dev/null"
+lxc exec rvprx -- bash -c "certbot certonly -n --agree-tos --email $EMAIL_CERTBOT --nginx -d $FQDN,$FQDN_collabora > /dev/null"
+#echo "$($_ORANGE_)Generating certificates: $FQDN_collabora$($_WHITE_)"
+#lxc exec rvprx -- bash -c "certbot certonly -n --agree-tos --email $EMAIL_CERTBOT --nginx -d $FQDN_collabora > /dev/null"
 
 # RVPRX dhparam
 echo "$($_ORANGE_)Generating dhparam$($_WHITE_)"
@@ -163,8 +163,8 @@ server {
     server_name $FQDN_collabora;
 
     # Let's Encrypt:
-    ssl_certificate     /etc/letsencrypt/live/$FQDN_collabora/cert.pem;
-    ssl_certificate_key /etc/letsencrypt/live/$FQDN_collabora/privkey.pem;
+    ssl_certificate     /etc/letsencrypt/live/$FQDN/cert.pem;
+    ssl_certificate_key /etc/letsencrypt/live/$FQDN/privkey.pem;
 
     # Add common Conf:
     include /etc/nginx/RVPRX_common.conf;
