@@ -1,0 +1,36 @@
+################################################################################
+#### This file contain the default used resources by each LXD container
+################################################################################
+
+#
+# 1c   => 1 CPU
+# 2c   => 2 CPU
+# ...
+# 256m => 256MB Memory
+# 512m => 512MB Memory
+# ...
+#
+
+################################################################################
+# Recommended configuration to VPS with this feature
+# Thread = 2
+# Memory = 2Go
+
+LXC_PROFILE_cloud="1c512m"
+LXC_PROFILE_collabora="1c512m"
+LXC_PROFILE_mariadb="1c256m"
+LXC_PROFILE_rvprx="1c256m"
+LXC_PROFILE_smtp="1c256m"
+
+################################################################################
+# Recommended configuration to VPS with this feature
+# Thread = 4
+# Memory = 4Go
+
+#LXC_PROFILE_cloud="1c1024m"
+#LXC_PROFILE_collabora="1c1024m"
+#LXC_PROFILE_mariadb="1c512m"
+#LXC_PROFILE_rvprx="1c1024m"
+#LXC_PROFILE_smtp="1c256m"
+
+################################################################################
