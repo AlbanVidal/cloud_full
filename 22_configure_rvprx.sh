@@ -136,7 +136,7 @@ server {
     server_name $FQDN;
 
     # Let's Encrypt:
-    ssl_certificate     /etc/letsencrypt/live/$FQDN/cert.pem;
+    ssl_certificate     /etc/letsencrypt/live/$FQDN/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/$FQDN/privkey.pem;
 
     # Add common Conf:
@@ -164,7 +164,7 @@ server {
     server_name $FQDN_collabora;
 
     # Let's Encrypt:
-    ssl_certificate     /etc/letsencrypt/live/$FQDN/cert.pem;
+    ssl_certificate     /etc/letsencrypt/live/$FQDN/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/$FQDN/privkey.pem;
 
     # Add common Conf:

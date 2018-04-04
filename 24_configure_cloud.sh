@@ -244,15 +244,15 @@ lxc exec cloud -- bash -c "occ config:system:set mail_smtpmode --value='smtp'
 
 ################################################################################
 
-echo "$($_ORANGE_)Add Let's Encrypt chain.pem (CA Root Certificates) in Nextcloud$($_WHITE_)"
-chain_pem="$(lxc exec rvprx -- cat /etc/letsencrypt/live/$FQDN/chain.pem)"
-lxc exec cloud -- bash -c "cat << 'EOF' >> /var/www/nextcloud/resources/config/ca-bundle.crt
-
-Let's Encrypt
-=============
-$chain_pem
-EOF
-"
+#echo "$($_ORANGE_)Add Let's Encrypt chain.pem (CA Root Certificates) in Nextcloud$($_WHITE_)"
+#chain_pem="$(lxc exec rvprx -- cat /etc/letsencrypt/live/$FQDN/chain.pem)"
+#lxc exec cloud -- bash -c "cat << 'EOF' >> /var/www/nextcloud/resources/config/ca-bundle.crt
+#
+#Let's Encrypt
+#=============
+#$chain_pem
+#EOF
+#"
 
 echo "$($_ORANGE_)Clean package cache (.deb files)$($_WHITE_)"
 lxc exec cloud -- bash -c "apt-get clean"
