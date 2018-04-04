@@ -242,6 +242,9 @@ lxc exec cloud -- bash -c "occ config:system:set mail_smtpmode --value='smtp'
                            occ config:system:set mail_smtpport --value='25'
                            "
 
+echo "$($_ORANGE_)Set Collabora Online trusted domain$($_WHITE_)"
+lxc exec cloud -- bash -c "occ config:app:set richdocuments wopi_url --value='https://$FQDN_collabora'"
+
 ################################################################################
 
 #echo "$($_ORANGE_)Add Let's Encrypt chain.pem (CA Root Certificates) in Nextcloud$($_WHITE_)"
