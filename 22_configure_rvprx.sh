@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# TODO
+# - logrotate (all CT)
+# - iptables isolateur: Deny !80 !443
+# - FAIL2BAN
+
 #
 # BSD 3-Clause License
 # 
@@ -39,10 +44,6 @@ _RED_="tput setaf 1"
 _GREEN_="tput setaf 2"
 _ORANGE_="tput setaf 3"
 ################################################################################
-
-# TODO
-# - logrotate (all CT)
-# - iptables isolateur: Deny !80 !443
 
 # Load Vars
 . 00_VARS
@@ -228,7 +229,13 @@ lxc exec rvprx -- bash -c "sed -i '/http {/a \\\t# Set max file size to 10G\\n\\
 lxc exec rvprx -- nginx -t
 lxc exec rvprx -- nginx -s reload
 
-## >> FAIL2BAN <<
+# Cron renew Let's encrypt certificate
+echo "$($_ORANGE_)Create renew Let's encrypt certificate daily cron$($_WHITE_)"
+lxc exec rvprx -- bash -c "cat << EOF > /etc/cron.daily/certbot-renew
+#!/bin/bash
+
+certbot renew --nginx > /dev/null
+EOF"
  
 ################################################################################
 
