@@ -16,21 +16,39 @@
 # Thread = 2
 # Memory = 2Go
 
-LXC_PROFILE_cloud="1c512m"
-LXC_PROFILE_collabora="1c512m"
-LXC_PROFILE_mariadb="1c256m"
-LXC_PROFILE_rvprx="1c256m"
-LXC_PROFILE_smtp="1c256m"
+LXC_PROFILE_cloud_CPU="cpu-1"
+LXC_PROFILE_cloud_MEM="ram-512"
+
+LXC_PROFILE_collabora_CPU="cpu-1"
+LXC_PROFILE_collabora_MEM="ram-512"
+
+LXC_PROFILE_mariadb_CPU="cpu-1"
+LXC_PROFILE_mariadb_MEM="ram-256"
+
+LXC_PROFILE_rvprx_CPU="cpu-1"
+LXC_PROFILE_rvprx_MEM="ram-256"
+
+LXC_PROFILE_smtp_CPU="cpu-1"
+LXC_PROFILE_smtp_MEM="ram-256"
 
 ################################################################################
 # Recommended configuration to VPS with this feature
 # Thread = 4
 # Memory = 4Go
 
-#LXC_PROFILE_cloud="1c1024m"
-#LXC_PROFILE_collabora="1c1024m"
-#LXC_PROFILE_mariadb="1c512m"
-#LXC_PROFILE_rvprx="1c1024m"
-#LXC_PROFILE_smtp="1c256m"
+#LXC_PROFILE_cloud_CPU="cpu-2"
+#LXC_PROFILE_cloud_MEM="ram-1024"
+#
+#LXC_PROFILE_collabora_CPU="cpu-2"
+#LXC_PROFILE_collabora_MEM="ram-1024"
+#
+#LXC_PROFILE_mariadb_CPU="cpu-1"
+#LXC_PROFILE_mariadb_MEM="ram-512"
+#
+#LXC_PROFILE_rvprx_CPU="cpu-2"
+#LXC_PROFILE_rvprx_MEM="ram-1024"
+#
+#LXC_PROFILE_smtp_CPU="cpu-1"
+#LXC_PROFILE_smtp_MEM="ram-256"
 
 ################################################################################

@@ -107,41 +107,45 @@ profiles:
       parent: lxdbrINT
       type: nic
 
-- name: 1c256m
-  description: "1 CPU and 256MB RAM"
+- name: cpu-1
+  description: "1 CPU"
+  config:
+    limits.cpu: "1"
+
+- name: cpu-2
+  description: "2 CPU"
+  config:
+    limits.cpu: "2"
+
+- name: cpu-4
+  description: "4 CPU"
+  config:
+    limits.cpu: "4"
+
+- name: ram-256
+  description: "256MB RAM"
   config:
     limits.memory: 256MB
-    limits.cpu: "1"
 
-- name: 1c512m
-  description: "1 CPU and 512MB RAM"
+- name: ram-512
+  description: "512MB RAM"
   config:
     limits.memory: 512MB
-    limits.cpu: "1"
 
-- name: 1c1024m
-  description: "1 CPU and 1GB RAM"
+- name: ram-1024
+  description: "1GB RAM"
   config:
     limits.memory: 1GB
-    limits.cpu: "1"
 
-- name: 1c2048m
-  description: "1 CPU and 2GB RAM"
+- name: ram-2048
+  description: "2GB RAM"
   config:
     limits.memory: 2GB
-    limits.cpu: "1"
 
-- name: 2c1024m
-  description: "2 CPU and 1GB RAM"
+- name: ram-4096
+  description: "4GB RAM"
   config:
-    limits.memory: 1GB
-    limits.cpu: "2"
-
-- name: 2c2048m
-  description: "2 CPU and 2GB RAM"
-  config:
-    limits.memory: 2GB
-    limits.cpu: "2"
+    limits.memory: 4GB
 
 EOF
 
@@ -168,7 +172,7 @@ EOF
 
 # CT 1 - CLOUD
 echo "$($_ORANGE_)LXD create container: cloud$($_WHITE_)"
-lxc launch images:debian/stretch cloud --profile default --profile privNet --profile $LXC_PROFILE_cloud
+lxc launch images:debian/stretch cloud --profile default --profile privNet --profile $LXC_PROFILE_cloud_CPU --profile $LXC_PROFILE_cloud_MEM
 sed -e "s/_IP_PUB_/$IP_cloud/" -e "s/_IP_PRIV_/$IP_cloud_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_cloud
 lxc file push /tmp/lxd_interfaces_cloud cloud/etc/network/interfaces
 lxc file push /tmp/lxd_resolv.conf cloud/etc/resolv.conf
@@ -176,7 +180,7 @@ lxc restart cloud
 
 # CT 2 - COLLABORA
 echo "$($_ORANGE_)LXD create container: collabora$($_WHITE_)"
-lxc launch images:debian/stretch collabora --profile default --profile privNet --profile $LXC_PROFILE_collabora
+lxc launch images:debian/stretch collabora --profile default --profile privNet --profile $LXC_PROFILE_collabora_CPU --profile $LXC_PROFILE_collabora_MEM
 sed -e "s/_IP_PUB_/$IP_collabora/" -e "s/_IP_PRIV_/$IP_collabora_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_collabora
 lxc file push /tmp/lxd_interfaces_collabora collabora/etc/network/interfaces
 lxc file push /tmp/lxd_resolv.conf collabora/etc/resolv.conf
@@ -184,7 +188,7 @@ lxc restart collabora
 
 # CT 3 - MariaDB
 echo "$($_ORANGE_)LXD create container: mariadb$($_WHITE_)"
-lxc launch images:debian/stretch mariadb --profile default --profile privNet --profile $LXC_PROFILE_mariadb
+lxc launch images:debian/stretch mariadb --profile default --profile privNet --profile $LXC_PROFILE_mariadb_CPU --profile $LXC_PROFILE_mariadb_MEM
 sed -e "s/_IP_PUB_/$IP_mariadb/" -e "s/_IP_PRIV_/$IP_mariadb_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_mariadb
 lxc file push /tmp/lxd_interfaces_mariadb mariadb/etc/network/interfaces
 lxc file push /tmp/lxd_resolv.conf mariadb/etc/resolv.conf
@@ -192,7 +196,7 @@ lxc restart mariadb
 
 # CT 4 - RVPRX
 echo "$($_ORANGE_)LXD create container: rvprx$($_WHITE_)"
-lxc launch images:debian/stretch rvprx --profile default --profile privNet --profile $LXC_PROFILE_rvprx
+lxc launch images:debian/stretch rvprx --profile default --profile privNet --profile $LXC_PROFILE_rvprx_CPU --profile $LXC_PROFILE_rvprx_MEM
 sed -e "s/_IP_PUB_/$IP_rvprx/" -e "s/_IP_PRIV_/$IP_rvprx_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_rvprx
 lxc file push /tmp/lxd_interfaces_rvprx rvprx/etc/network/interfaces
 lxc file push /tmp/lxd_resolv.conf rvprx/etc/resolv.conf
@@ -200,7 +204,7 @@ lxc restart rvprx
 
 # CT 5 - SMTP
 echo "$($_ORANGE_)LXD create container: smtp$($_WHITE_)"
-lxc launch images:debian/stretch smtp --profile default --profile privNet --profile $LXC_PROFILE_smtp
+lxc launch images:debian/stretch smtp --profile default --profile privNet --profile $LXC_PROFILE_smtp_CPU --profile $LXC_PROFILE_smtp_MEM
 sed -e "s/_IP_PUB_/$IP_smtp/" -e "s/_IP_PRIV_/$IP_smtp_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_smtp
 lxc file push /tmp/lxd_interfaces_smtp smtp/etc/network/interfaces
 lxc file push /tmp/lxd_resolv.conf smtp/etc/resolv.conf
