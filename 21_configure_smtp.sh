@@ -103,7 +103,7 @@ sed -i                                         \
 lxc file push /tmp_lxd_smtp_etc_postfix_main.cf smtp/etc/postfix/main.cf
 lxc exec smtp -- bash -c "echo $FQDN > /etc/mailname
                           systemctl restart postfix
-                          echo Test SMTP $FQDN|mail -s 'Test SMTP $FQDN' $MAIL_TEST
+                          echo Test SMTP $FQDN|mail -s 'Test SMTP $FQDN' $NEXTCLOUD_admin_email
                           "
 
 ################################################################################

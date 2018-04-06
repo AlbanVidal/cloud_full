@@ -56,21 +56,21 @@ else
     read FQDN
     echo -n "$($_GREEN_)Collabora FQDN:$($_WHITE_) "
     read FQDN_collabora
-    echo -n "$($_GREEN_)Test email (to test Postfix after conf):$($_WHITE_) "
-    read MAIL_TEST
     echo -n "$($_GREEN_)Certbort Alert email:$($_WHITE_) "
     read EMAIL_CERTBOT
     echo -n "$($_GREEN_)Nextcloud Admin User:$($_WHITE_) "
     read NEXTCLOUD_admin_user
+    echo -n "$($_GREEN_)Nextcloud Admin Email:$($_WHITE_) "
+    read NEXTCLOUD_admin_email
     echo -n "$($_GREEN_)Nextcloud Admin Password (hidden entry):$($_WHITE_) "
     read -rs NEXTCLOUD_admin_password
 
     cat << EOF > 00_VARS
 FQDN="$FQDN"
 FQDN_collabora="$FQDN_collabora"
-MAIL_TEST="$MAIL_TEST"
 EMAIL_CERTBOT="$EMAIL_CERTBOT"
 NEXTCLOUD_admin_user="$NEXTCLOUD_admin_user"
+NEXTCLOUD_admin_email="$NEXTCLOUD_admin_email"
 NEXTCLOUD_admin_password="$NEXTCLOUD_admin_password"
 EOF
 
