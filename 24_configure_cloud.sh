@@ -50,6 +50,13 @@ _ORANGE_="tput setaf 3"
 # Load Network Vars
 . 01_NETWORK_VARS
 
+# Load Other vars 
+# - MAX_UPLOAD_FILE_SIZE
+# - LANGUAGE
+# - TIME_ZONE
+# - NEXTCLOUD_LOG_ROTATE_SIZE
+. 03_OTHER_VARS
+
 ################################################################################
 
 #### CLOUD
@@ -198,24 +205,32 @@ lxc exec cloud -- bash -c "systemctl reload apache2"
 echo "$($_ORANGE_)Nextcloud installation$($_WHITE_)"
 lxc exec cloud -- bash -c "occ maintenance:install --database 'mysql' --database-host '$IP_mariadb_PRIV' --database-name 'nextcloud'  --database-user 'nextcloud' --database-pass '$MDP_nextcoud' --admin-user '$NEXTCLOUD_admin_user' --admin-pass '$NEXTCLOUD_admin_password' --data-dir='/srv/data-cloud'"
 
+echo "$($_ORANGE_)Tune MAX upload file size$($_WHITE_)"
+lxc exec cloud -- bash -c "sed -i \
+                             -e 's/upload_max_filesize=.*/upload_max_filesize=$MAX_UPLOAD_FILE_SIZE/' \
+                             -e 's/post_max_size=.*/post_max_size=$MAX_UPLOAD_FILE_SIZE/' \
+                             /var/www/nextcloud/.user.ini
+                           "
+
 echo "$($_ORANGE_)Tune Nextcloud conf$($_WHITE_)"
-lxc exec cloud -- bash -c "occ config:system:set trusted_domains 0 --value='$FQDN'
-                           occ config:system:set overwrite.cli.url --value='$FQDN'
-                           # French conf
-                           occ config:system:set default_language --value='fr'
-                           occ config:system:set force_language   --value='fr'
+lxc exec cloud -- bash -c "occ config:system:set trusted_domains 0    --value='$FQDN'
+                           occ config:system:set overwrite.cli.url    --value='$FQDN'
                            occ config:system:set htaccess.RewriteBase --value='/'
-                           occ config:system:set logtimezone --value='Europe/Paris'
+                           # Language and time zone settings
+                           occ config:system:set default_language     --value='$LANGUAGE'
+                           occ config:system:set force_language       --value='$LANGUAGE'
+                           occ config:system:set logtimezone          --value='$TIME_ZONE'
                            # Redis
-                           occ config:system:set memcache.local --value='\\OC\\Memcache\\Redis'
-                           occ config:system:set memcache.locking --value='\\OC\\Memcache\\Redis'
-                           occ config:system:set redis host --value='localhost'
-                           occ config:system:set redis port --value='6379'
+                           occ config:system:set memcache.local       --value='\\OC\\Memcache\\Redis'
+                           occ config:system:set memcache.locking     --value='\\OC\\Memcache\\Redis'
+                           occ config:system:set redis host           --value='localhost'
+                           occ config:system:set redis port           --value='6379'
                            # Log
-                           occ config:system:set loglevel --value='2'
-                           occ config:system:set logfile --value='/var/log/nextcloud/nextcloud.log'
-                           # 100Mo ( 100 * 1024 * 1024 ) = 104857600 byte
-                           occ config:system:set log_rotate_size --value=$(( 100 * 1024 * 1024 ))
+                           occ config:system:set loglevel             --value='2'
+                           occ config:system:set logfile              --value='/var/log/nextcloud/nextcloud.log'
+                           # Example for 100MB :
+                           # 100MB ( 100 * 1024 * 1024 ) = 104857600 byte
+                           occ config:system:set log_rotate_size      --value=$(( $NEXTCLOUD_LOG_ROTATE_SIZE * 1024 * 1024 ))
                            "
 
 echo "$($_ORANGE_)Update .htaccess$($_WHITE_)"

@@ -1,0 +1,17 @@
+################################################################################
+#### This file contain other tunable vars 
+################################################################################
+
+# Default MAX upload file size
+# The default value is 512M
+MAX_UPLOAD_FILE_SIZE="5G"
+
+# Default Language
+LANGUAGE="fr"
+
+# Time Zone
+TIME_ZONE="Europe/Paris"
+
+# Nextcloud Log rotate size
+# Default = 100MB
+NEXTCLOUD_LOG_ROTATE_SIZE="100"
