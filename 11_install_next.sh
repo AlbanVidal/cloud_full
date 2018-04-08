@@ -217,6 +217,32 @@ echo "$($_GREEN_)Waiting all containers correctly started (networking...) 5 seco
 sleep 5
 
 ################################################################################
+#### Common containers configuration
+
+echo ""
+echo "$($_GREEN_)Common containers configuration$($_WHITE_)"
+echo "$($_ORANGE_)Update, upgrade and install common packages$($_WHITE_)"
+
+CT_LIST="smtp rvprx mariadb cloud collabora"
+
+PACKAGES="vim apt-utils bsd-mailx unattended-upgrades apt-listchanges"
+
+# Configure all container
+for CT in $CT_LIST ; do
+    echo "$($_ORANGE_)${CT}...$($_WHITE_)"
+    lxc exec $CT -- bash -c "
+        echo 'deb http://ftp.fr.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/stretch-backports.list
+        apt-get update > /dev/null
+        DEBIAN_FRONTEND=noninteractive apt-get -y install $PACKAGES > /dev/null
+        DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null
+        sed -i \
+            -e 's#^//Unattended-Upgrade::Mail .*#Unattended-Upgrade::Mail \"$EMAIL_CERTBOT\";#' \
+            -e 's#^//Unattended-Upgrade::MailOnlyOnError .*#Unattended-Upgrade::MailOnlyOnError \"true\";#' \
+            /etc/apt/apt.conf.d/50unattended-upgrades
+    "
+done
+
+################################################################################
 #### CONTAINER CONFIGURATION
 echo ""
 echo "$($_GREEN_)CONTAINER CONFIGURATION$($_WHITE_)"

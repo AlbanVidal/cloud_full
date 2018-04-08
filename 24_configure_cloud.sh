@@ -75,11 +75,6 @@ mkdir -p /srv/data-cloud
 chown 1000033:1000033 /srv/data-cloud
 lxc config device add cloud sharedCloud disk path=/srv/data-cloud source=/srv/data-cloud
 
-echo "$($_ORANGE_)Update, upgrade and packages$($_WHITE_)"
-lxc exec cloud -- apt-get update > /dev/null
-lxc exec cloud -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null"
-lxc exec cloud -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install vim apt-utils > /dev/null"
- 
 echo "$($_ORANGE_)Create « occ » alias command$($_WHITE_)"
 lxc exec cloud -- bash -c 'echo "sudo -u www-data php /var/www/nextcloud/occ \$@" > /usr/local/bin/occ
                            chmod +x /usr/local/bin/occ

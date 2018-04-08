@@ -86,14 +86,21 @@ fi
 ################################################################################
 #### HOST CONFIGURATION
 
-# Update apt package list
-echo "$($_ORANGE_)Update apt package list$($_WHITE_)"
+#############
+echo "$($_ORANGE_)Update and Upgrade system packages and default apt configuration$($_WHITE_)"
+
+PACKAGES="vim apt-utils bsd-mailx unattended-upgrades apt-listchanges"
+# Add backports
+echo 'deb http://ftp.fr.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/stretch-backports.list
 apt-get update > /dev/null
+DEBIAN_FRONTEND=noninteractive apt-get -y install $PACKAGES > /dev/null
+DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null
+sed -i \
+    -e "s#^//Unattended-Upgrade::Mail .*#Unattended-Upgrade::Mail \"$EMAIL_CERTBOT\";#" \
+    -e "s#^//Unattended-Upgrade::MailOnlyOnError .*#Unattended-Upgrade::MailOnlyOnError \"true\";#" \
+    /etc/apt/apt.conf.d/50unattended-upgrades
 
 #############
-echo "$($_ORANGE_)Upgrading system packages$($_WHITE_)"
-DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null
-
 
 # Nat post 80 and 443 => RVPRX
 # Enable Masquerade and NAT rules

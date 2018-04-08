@@ -66,12 +66,6 @@ lxc restart collabora
 # wait 5 sec for Network
 sleep 5
 
-
-echo "$($_ORANGE_)Update, upgrade and packages$($_WHITE_)"
-lxc exec collabora -- apt-get update > /dev/null
-lxc exec collabora -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null"
-lxc exec collabora -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install vim apt-utils > /dev/null"
- 
 echo "$($_ORANGE_)Add Docker repo and install Docker$($_WHITE_)"
 lxc exec collabora -- bash -c "apt-get -y install curl apt-transport-https gnupg gnupg2 gnupg1 > /dev/null
                                curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -

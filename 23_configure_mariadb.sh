@@ -62,13 +62,8 @@ fi
 MDP_nextcoud="$(cat /tmp/lxc_nextcloud_password)"
 
 echo "$($_GREEN_)BEGIN mariadb$($_WHITE_)"
-echo "$($_ORANGE_)Update, upgrade and packages$($_WHITE_)"
-lxc exec mariadb -- apt-get update > /dev/null
-lxc exec mariadb -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null"
-lxc exec mariadb -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install vim apt-utils > /dev/null"
 
 # Install MariaDB serveur
-
 echo "$($_ORANGE_)Install MariaDB serveur$($_WHITE_)"
 lxc exec mariadb -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install mariadb-server > /dev/null"
 

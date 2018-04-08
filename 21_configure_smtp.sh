@@ -54,10 +54,8 @@ _ORANGE_="tput setaf 3"
 
 #### SMTP
 echo "$($_GREEN_)BEGIN smtp$($_WHITE_)"
-echo "$($_ORANGE_)Update, upgrade and packages$($_WHITE_)"
-lxc exec smtp -- apt-get update > /dev/null
-lxc exec smtp -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null"
-lxc exec smtp -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install vim apt-utils postfix bsd-mailx > /dev/null"
+echo "$($_ORANGE_)Install specific packages$($_WHITE_)"
+lxc exec smtp -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install postfix > /dev/null"
 
 # Postfix conf (create, push and reload)
 cat << 'EOF' > /tmp_lxd_smtp_etc_postfix_main.cf

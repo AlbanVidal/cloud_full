@@ -55,13 +55,9 @@ _ORANGE_="tput setaf 3"
 
 #### RVPRX
 echo "$($_GREEN_)BEGIN rvprx$($_WHITE_)"
-echo "$($_ORANGE_)Update, upgrade and packages$($_WHITE_)"
-lxc exec rvprx -- bash -c 'echo "deb http://ftp.fr.debian.org/debian stretch-backports main" > /etc/apt/sources.list.d/stretch-backports.list'
-lxc exec rvprx -- apt-get update > /dev/null
-# Upgrade
-lxc exec rvprx -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null"
+echo "$($_ORANGE_)Install specific packages$($_WHITE_)"
 # Nginx - fail2ban
-lxc exec rvprx -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install vim apt-utils nginx iptables fail2ban > /dev/null"
+lxc exec rvprx -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install nginx iptables fail2ban > /dev/null"
 # certbot for Nginx
 lxc exec rvprx -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install python3-certbot-nginx/stretch-backports > /dev/null"
 # conf file letsencrypt
