@@ -50,9 +50,6 @@ _ORANGE_="tput setaf 3"
 # Load Network Vars
 . 01_NETWORK_VARS
 
-# Load Resources Vars
-. 02_RESOURCES_VARS
-
 ################################################################################
 
 #### CLOUD
