@@ -51,6 +51,10 @@ _ORANGE_="tput setaf 3"
 # Load Network Vars
 . 01_NETWORK_VARS
 
+# Load Other vars 
+# - DEBIAN_RELEASE
+. 03_OTHER_VARS
+
 ################################################################################
 
 #### RVPRX
@@ -58,8 +62,16 @@ echo "$($_GREEN_)BEGIN rvprx$($_WHITE_)"
 echo "$($_ORANGE_)Install specific packages$($_WHITE_)"
 # Nginx - fail2ban
 lxc exec rvprx -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install nginx iptables fail2ban > /dev/null"
-# certbot for Nginx
-lxc exec rvprx -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install python3-certbot-nginx/stretch-backports > /dev/null"
+
+# Certbot for Nginx
+if [ "$DEBIAN_RELEASE" == "stretch" ] ; then
+    # If stretch release, install with backports (not available in std repo)
+    lxc exec rvprx -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install python3-certbot-nginx/stretch-backports > /dev/null"
+else
+    lxc exec rvprx -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install python3-certbot-nginx > /dev/null"
+fi
+
+
 # conf file letsencrypt
 cat << EOF > /tmp_lxd_rvprx_etc_letsencrypt_cli.ini
 # Because we are using logrotate for greater flexibility, disable the

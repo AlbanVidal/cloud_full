@@ -90,6 +90,10 @@ fi
 # Load Network Vars
 . 01_NETWORK_VARS
 
+# Load Other vars 
+# - DEBIAN_RELEASE
+. 03_OTHER_VARS
+
 ################################################################################
 #### HOST CONFIGURATION
 
@@ -97,8 +101,13 @@ fi
 echo "$($_ORANGE_)Update and Upgrade system packages and default apt configuration$($_WHITE_)"
 
 PACKAGES="vim apt-utils bsd-mailx unattended-upgrades apt-listchanges bind9-host logrotate"
-# Add backports
-echo 'deb http://ftp.fr.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/stretch-backports.list
+
+if [ "$DEBIAN_RELEASE" == "stretch" ] ; then
+    # Add backports
+    echo 'deb http://ftp.fr.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/stretch-backports.list
+fi
+
+
 apt-get update > /dev/null
 DEBIAN_FRONTEND=noninteractive apt-get -y install $PACKAGES > /dev/null
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null

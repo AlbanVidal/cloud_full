@@ -53,6 +53,10 @@ _ORANGE_="tput setaf 3"
 # Load Resources Vars
 . 02_RESOURCES_VARS
 
+# Load Other vars 
+# - DEBIAN_RELEASE
+. 03_OTHER_VARS
+
 ################################################################################
 
 # LXD INIT
@@ -175,7 +179,7 @@ EOF
 
 # CT 1 - CLOUD
 echo "$($_ORANGE_)LXD create container: cloud$($_WHITE_)"
-lxc launch images:debian/stretch cloud --profile default --profile privNet
+lxc launch images:debian/$DEBIAN_RELEASE cloud --profile default --profile privNet
 sed -e "s/_IP_PUB_/$IP_cloud/" -e "s/_IP_PRIV_/$IP_cloud_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_cloud
 lxc file push /tmp/lxd_interfaces_cloud cloud/etc/network/interfaces
 lxc file push /tmp/lxd_resolv.conf cloud/etc/resolv.conf
@@ -183,7 +187,7 @@ lxc restart cloud
 
 # CT 2 - COLLABORA
 echo "$($_ORANGE_)LXD create container: collabora$($_WHITE_)"
-lxc launch images:debian/stretch collabora --profile default --profile privNet
+lxc launch images:debian/$DEBIAN_RELEASE collabora --profile default --profile privNet
 sed -e "s/_IP_PUB_/$IP_collabora/" -e "s/_IP_PRIV_/$IP_collabora_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_collabora
 lxc file push /tmp/lxd_interfaces_collabora collabora/etc/network/interfaces
 lxc file push /tmp/lxd_resolv.conf collabora/etc/resolv.conf
@@ -191,7 +195,7 @@ lxc restart collabora
 
 # CT 3 - MariaDB
 echo "$($_ORANGE_)LXD create container: mariadb$($_WHITE_)"
-lxc launch images:debian/stretch mariadb --profile default --profile privNet
+lxc launch images:debian/$DEBIAN_RELEASE mariadb --profile default --profile privNet
 sed -e "s/_IP_PUB_/$IP_mariadb/" -e "s/_IP_PRIV_/$IP_mariadb_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_mariadb
 lxc file push /tmp/lxd_interfaces_mariadb mariadb/etc/network/interfaces
 lxc file push /tmp/lxd_resolv.conf mariadb/etc/resolv.conf
@@ -199,7 +203,7 @@ lxc restart mariadb
 
 # CT 4 - RVPRX
 echo "$($_ORANGE_)LXD create container: rvprx$($_WHITE_)"
-lxc launch images:debian/stretch rvprx --profile default --profile privNet
+lxc launch images:debian/$DEBIAN_RELEASE rvprx --profile default --profile privNet
 sed -e "s/_IP_PUB_/$IP_rvprx/" -e "s/_IP_PRIV_/$IP_rvprx_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_rvprx
 lxc file push /tmp/lxd_interfaces_rvprx rvprx/etc/network/interfaces
 lxc file push /tmp/lxd_resolv.conf rvprx/etc/resolv.conf
@@ -207,7 +211,7 @@ lxc restart rvprx
 
 # CT 5 - SMTP
 echo "$($_ORANGE_)LXD create container: smtp$($_WHITE_)"
-lxc launch images:debian/stretch smtp --profile default --profile privNet
+lxc launch images:debian/$DEBIAN_RELEASE smtp --profile default --profile privNet
 sed -e "s/_IP_PUB_/$IP_smtp/" -e "s/_IP_PRIV_/$IP_smtp_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_smtp
 lxc file push /tmp/lxd_interfaces_smtp smtp/etc/network/interfaces
 lxc file push /tmp/lxd_resolv.conf smtp/etc/resolv.conf
@@ -230,8 +234,12 @@ PACKAGES="vim apt-utils bsd-mailx unattended-upgrades apt-listchanges logrotate"
 # Configure all container
 for CT in $CT_LIST ; do
     echo "$($_ORANGE_)${CT}...$($_WHITE_)"
+
+    if [ "$DEBIAN_RELEASE" == "stretch" ] ; then
+        lxc exec $CT -- bash -c "echo 'deb http://ftp.fr.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/stretch-backports.list"
+    fi
+
     lxc exec $CT -- bash -c "
-        echo 'deb http://ftp.fr.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/stretch-backports.list
         apt-get update > /dev/null
         DEBIAN_FRONTEND=noninteractive apt-get -y install $PACKAGES > /dev/null
         DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null

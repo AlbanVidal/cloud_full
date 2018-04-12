@@ -50,6 +50,10 @@ _ORANGE_="tput setaf 3"
 # Load Network Vars
 . 01_NETWORK_VARS
 
+# Load Other vars 
+# - DEBIAN_RELEASE
+. 03_OTHER_VARS
+
 ################################################################################
 
 #### COLLABORA
@@ -69,7 +73,7 @@ sleep 5
 echo "$($_ORANGE_)Add Docker repo and install Docker$($_WHITE_)"
 lxc exec collabora -- bash -c "apt-get -y install curl apt-transport-https gnupg gnupg2 gnupg1 > /dev/null
                                curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
-                               echo -e '\n# Depôt Docker\ndeb https://download.docker.com/linux/debian stretch stable' > /etc/apt/sources.list.d/docker.list
+                               echo -e '\n# Depôt Docker\ndeb https://download.docker.com/linux/debian $DEBIAN_RELEASE stable' > /etc/apt/sources.list.d/docker.list
                                apt-get update > /dev/null
                                apt-get -y install docker-ce > /dev/null
                                "

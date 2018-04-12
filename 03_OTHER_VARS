@@ -18,3 +18,11 @@ NEXTCLOUD_LOG_ROTATE_SIZE="100"
 
 # Nextcloud data directory
 NEXTCLOUD_DATA_DIR="/srv/data-cloud"
+
+## Debian release
+#
+# - stretch => OK
+# - buster  => TESTS IN PROGRESS
+#
+DEBIAN_RELEASE="stretch"
+#DEBIAN_RELEASE="buster"
