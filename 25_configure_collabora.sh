@@ -61,7 +61,7 @@ lxc config set collabora security.privileged true
 # Enable nesting (Docker in LXD)
 lxc config set collabora security.nesting true
 # Disable apparmor
-lxc config set collabora raw.lxc lxc.aa_profile=unconfined
+#lxc config set collabora raw.lxc lxc.aa_profile=unconfined
 lxc restart collabora
 # wait 5 sec for Network
 sleep 5
