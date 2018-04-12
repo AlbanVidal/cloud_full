@@ -225,7 +225,7 @@ echo "$($_ORANGE_)Update, upgrade and install common packages$($_WHITE_)"
 
 CT_LIST="smtp rvprx mariadb cloud collabora"
 
-PACKAGES="vim apt-utils bsd-mailx unattended-upgrades apt-listchanges"
+PACKAGES="vim apt-utils bsd-mailx unattended-upgrades apt-listchanges logrotate"
 
 # Configure all container
 for CT in $CT_LIST ; do

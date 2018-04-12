@@ -96,7 +96,7 @@ fi
 #############
 echo "$($_ORANGE_)Update and Upgrade system packages and default apt configuration$($_WHITE_)"
 
-PACKAGES="vim apt-utils bsd-mailx unattended-upgrades apt-listchanges bind9-host"
+PACKAGES="vim apt-utils bsd-mailx unattended-upgrades apt-listchanges bind9-host logrotate"
 # Add backports
 echo 'deb http://ftp.fr.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/stretch-backports.list
 apt-get update > /dev/null
