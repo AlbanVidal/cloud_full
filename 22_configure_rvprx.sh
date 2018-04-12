@@ -61,7 +61,8 @@ _ORANGE_="tput setaf 3"
 echo "$($_GREEN_)BEGIN rvprx$($_WHITE_)"
 echo "$($_ORANGE_)Install specific packages$($_WHITE_)"
 # Nginx - fail2ban
-lxc exec rvprx -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install nginx iptables fail2ban > /dev/null"
+#lxc exec rvprx -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install nginx iptables fail2ban > /dev/null"
+lxc exec rvprx -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install nginx iptables > /dev/null"
 
 # Certbot for Nginx
 if [ "$DEBIAN_RELEASE" == "stretch" ] ; then
