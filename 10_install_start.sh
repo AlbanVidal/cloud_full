@@ -89,7 +89,7 @@ fi
 #############
 echo "$($_ORANGE_)Update and Upgrade system packages and default apt configuration$($_WHITE_)"
 
-PACKAGES="vim apt-utils bsd-mailx unattended-upgrades apt-listchanges"
+PACKAGES="vim apt-utils bsd-mailx unattended-upgrades apt-listchanges bind9-host"
 # Add backports
 echo 'deb http://ftp.fr.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/stretch-backports.list
 apt-get update > /dev/null
@@ -99,6 +99,19 @@ sed -i \
     -e "s#^//Unattended-Upgrade::Mail .*#Unattended-Upgrade::Mail \"$EMAIL_CERTBOT\";#" \
     -e "s#^//Unattended-Upgrade::MailOnlyOnError .*#Unattended-Upgrade::MailOnlyOnError \"true\";#" \
     /etc/apt/apt.conf.d/50unattended-upgrades
+
+#############
+
+echo "$($_ORANGE_)Test if FQDN records A and PTR is OK$($_WHITE_)"
+TEST_IP=$(host -t A $FQDN|awk '{print $4}')
+TEST_FQDN=$(host -t PTR $TEST_IP|awk '{print $5}')
+# Remove « . » in end on PTR record
+if [ "${TEST_FQDN::-1}" != "$FQDN" ] ; then
+    echo "ERROR DNS RECORDS"
+    echo "Your FQDN « $FQDN » is not equal to PTR value: « $TEST_FQDN »"
+    echo "Please fix that and retry"
+    exit 1
+fi
 
 #############
 
