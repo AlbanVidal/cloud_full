@@ -70,10 +70,10 @@ MDP_nextcoud="$(cat /tmp/lxc_nextcloud_password)"
 
 echo "$($_GREEN_)BEGIN cloud$($_WHITE_)"
 
-echo "$($_ORANGE_)Create and attach /srv/data-cloud directory$($_WHITE_)"
-mkdir -p /srv/data-cloud
-chown 1000033:1000033 /srv/data-cloud
-lxc config device add cloud sharedCloud disk path=/srv/data-cloud source=/srv/data-cloud
+echo "$($_ORANGE_)Create and attach $NEXTCLOUD_DATA_DIR directory$($_WHITE_)"
+mkdir -p $NEXTCLOUD_DATA_DIR
+chown 1000033:1000033 $NEXTCLOUD_DATA_DIR
+lxc config device add cloud DataCloud disk path=$NEXTCLOUD_DATA_DIR source=$NEXTCLOUD_DATA_DIR
 
 echo "$($_ORANGE_)Create « occ » alias command$($_WHITE_)"
 lxc exec cloud -- bash -c 'echo "sudo -u www-data php /var/www/nextcloud/occ \$@" > /usr/local/bin/occ
@@ -198,7 +198,7 @@ echo "$($_ORANGE_)Reload apache2$($_WHITE_)"
 lxc exec cloud -- bash -c "systemctl reload apache2"
 
 echo "$($_ORANGE_)Nextcloud installation$($_WHITE_)"
-lxc exec cloud -- bash -c "occ maintenance:install --database 'mysql' --database-host '$IP_mariadb_PRIV' --database-name 'nextcloud'  --database-user 'nextcloud' --database-pass '$MDP_nextcoud' --admin-user '$NEXTCLOUD_admin_user' --admin-pass '$NEXTCLOUD_admin_password' --data-dir='/srv/data-cloud'"
+lxc exec cloud -- bash -c "occ maintenance:install --database 'mysql' --database-host '$IP_mariadb_PRIV' --database-name 'nextcloud'  --database-user 'nextcloud' --database-pass '$MDP_nextcoud' --admin-user '$NEXTCLOUD_admin_user' --admin-pass '$NEXTCLOUD_admin_password' --data-dir='$NEXTCLOUD_DATA_DIR'"
 
 echo "$($_ORANGE_)Tune MAX upload file size$($_WHITE_)"
 lxc exec cloud -- bash -c "sed -i \

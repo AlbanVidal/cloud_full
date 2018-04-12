@@ -15,3 +15,6 @@ TIME_ZONE="Europe/Paris"
 # Nextcloud Log rotate size
 # Default = 100MB
 NEXTCLOUD_LOG_ROTATE_SIZE="100"
+
+# Nextcloud data directory
+NEXTCLOUD_DATA_DIR="/srv/data-cloud"
