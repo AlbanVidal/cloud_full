@@ -55,6 +55,7 @@ _ORANGE_="tput setaf 3"
 # - LANGUAGE
 # - TIME_ZONE
 # - NEXTCLOUD_LOG_ROTATE_SIZE
+# - NEXTCLOUD_DATA_DIR
 . 03_OTHER_VARS
 
 ################################################################################
