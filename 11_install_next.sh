@@ -239,6 +239,8 @@ for CT in $CT_LIST ; do
             -e 's#^//Unattended-Upgrade::Mail .*#Unattended-Upgrade::Mail \"$EMAIL_CERTBOT\";#' \
             -e 's#^//Unattended-Upgrade::MailOnlyOnError .*#Unattended-Upgrade::MailOnlyOnError \"true\";#' \
             /etc/apt/apt.conf.d/50unattended-upgrades
+        systemctl stop exim4
+        systemctl disable exim4
     "
 done
 
