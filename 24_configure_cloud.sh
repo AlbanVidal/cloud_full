@@ -186,7 +186,7 @@ lxc exec cloud -- bash -c 'cat << "EOF" > /etc/apache2/sites-available/nextcloud
 EOF'
 
 echo "$($_ORANGE_)Update FQDN$($_WHITE_)"
-lxc exec cloud -- bash -c "sed -i -e 's/__FQDN__/$FQDN/' -e 's/__MAIL_ADMIN__/$EMAIL_CERTBOT/' /etc/apache2/sites-available/nextcloud.conf"
+lxc exec cloud -- bash -c "sed -i -e 's/__FQDN__/$FQDN/' -e 's/__MAIL_ADMIN__/$TECH_ADMIN_EMAIL/' /etc/apache2/sites-available/nextcloud.conf"
 
 echo "$($_ORANGE_)Disable Default Vhost and enable nextcloud$($_WHITE_)"
 lxc exec cloud -- bash -c "a2dissite 000-default > /dev/null

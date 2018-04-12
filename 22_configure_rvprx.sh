@@ -72,9 +72,9 @@ lxc file push /tmp_lxd_rvprx_etc_letsencrypt_cli.ini rvprx/etc/letsencrypt/cli.i
 
 # Generating certificates
 echo "$($_ORANGE_)Generating certificates: $FQDN$($_WHITE_)"
-lxc exec rvprx -- bash -c "certbot certonly -n --agree-tos --email $EMAIL_CERTBOT --nginx -d $FQDN,$FQDN_collabora > /dev/null"
+lxc exec rvprx -- bash -c "certbot certonly -n --agree-tos --email $TECH_ADMIN_EMAIL --nginx -d $FQDN,$FQDN_collabora > /dev/null"
 #echo "$($_ORANGE_)Generating certificates: $FQDN_collabora$($_WHITE_)"
-#lxc exec rvprx -- bash -c "certbot certonly -n --agree-tos --email $EMAIL_CERTBOT --nginx -d $FQDN_collabora > /dev/null"
+#lxc exec rvprx -- bash -c "certbot certonly -n --agree-tos --email $TECH_ADMIN_EMAIL --nginx -d $FQDN_collabora > /dev/null"
 
 # RVPRX dhparam
 echo "$($_ORANGE_)Generating dhparam$($_WHITE_)"

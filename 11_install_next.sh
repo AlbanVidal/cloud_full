@@ -236,7 +236,7 @@ for CT in $CT_LIST ; do
         DEBIAN_FRONTEND=noninteractive apt-get -y install $PACKAGES > /dev/null
         DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null
         sed -i \
-            -e 's#^//Unattended-Upgrade::Mail .*#Unattended-Upgrade::Mail \"$EMAIL_CERTBOT\";#' \
+            -e 's#^//Unattended-Upgrade::Mail .*#Unattended-Upgrade::Mail \"$TECH_ADMIN_EMAIL\";#' \
             -e 's#^//Unattended-Upgrade::MailOnlyOnError .*#Unattended-Upgrade::MailOnlyOnError \"true\";#' \
             /etc/apt/apt.conf.d/50unattended-upgrades
         systemctl stop exim4

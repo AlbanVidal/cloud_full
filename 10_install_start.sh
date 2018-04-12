@@ -51,24 +51,31 @@ else
     echo ""
     echo "$($_RED_)File « 00_VARS » don't exist$($_WHITE_)"
     echo "$($_ORANGE_)Please reply to the next questions$($_WHITE_)"
+
+    echo ""
+    echo"$($_ORANGE_)** TECHNICAL **$($_WHITE_)"
     echo ""
     echo -n "$($_GREEN_)FQDN:$($_WHITE_) "
     read FQDN
     echo -n "$($_GREEN_)Collabora FQDN:$($_WHITE_) "
     read FQDN_collabora
-    echo -n "$($_GREEN_)Certbort Alert email:$($_WHITE_) "
-    read EMAIL_CERTBOT
-    echo -n "$($_GREEN_)Nextcloud Admin User:$($_WHITE_) "
+    echo -n "$($_GREEN_)Technical Administrator Email:$($_WHITE_) "
+    read TECH_ADMIN_EMAIL
+
+    echo ""
+    echo"$($_ORANGE_)** CLOUD **$($_WHITE_)"
+    echo ""
+    echo -n "$($_GREEN_)Nextcloud Administrator User:$($_WHITE_) "
     read NEXTCLOUD_admin_user
-    echo -n "$($_GREEN_)Nextcloud Admin Email:$($_WHITE_) "
+    echo -n "$($_GREEN_)Nextcloud Administrator Email:$($_WHITE_) "
     read NEXTCLOUD_admin_email
-    echo -n "$($_GREEN_)Nextcloud Admin Password (hidden entry):$($_WHITE_) "
+    echo -n "$($_GREEN_)Nextcloud Administrator Password (hidden entry):$($_WHITE_) "
     read -rs NEXTCLOUD_admin_password
 
     cat << EOF > 00_VARS
 FQDN="$FQDN"
 FQDN_collabora="$FQDN_collabora"
-EMAIL_CERTBOT="$EMAIL_CERTBOT"
+TECH_ADMIN_EMAIL="$TECH_ADMIN_EMAIL"
 NEXTCLOUD_admin_user="$NEXTCLOUD_admin_user"
 NEXTCLOUD_admin_email="$NEXTCLOUD_admin_email"
 NEXTCLOUD_admin_password="$NEXTCLOUD_admin_password"
@@ -96,7 +103,7 @@ apt-get update > /dev/null
 DEBIAN_FRONTEND=noninteractive apt-get -y install $PACKAGES > /dev/null
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null
 sed -i \
-    -e "s#^//Unattended-Upgrade::Mail .*#Unattended-Upgrade::Mail \"$EMAIL_CERTBOT\";#" \
+    -e "s#^//Unattended-Upgrade::Mail .*#Unattended-Upgrade::Mail \"$TECH_ADMIN_EMAIL\";#" \
     -e "s#^//Unattended-Upgrade::MailOnlyOnError .*#Unattended-Upgrade::MailOnlyOnError \"true\";#" \
     /etc/apt/apt.conf.d/50unattended-upgrades
 
