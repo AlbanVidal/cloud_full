@@ -232,7 +232,7 @@ lxc exec cloud -- bash -c "occ config:system:set trusted_domains 0    --value='$
 echo "$($_ORANGE_)Update .htaccess$($_WHITE_)"
 lxc exec cloud -- bash -c "occ maintenance:update:htaccess > /dev/null"
 
-echo "$($_ORANGE_)Install app in Nextcloud$($_WHITE_)"
+echo "$($_ORANGE_)Install applications in Nextcloud$($_WHITE_)"
 lxc exec cloud -- bash -c "occ app:install calendar
                            occ app:enable  calendar
                            occ app:enable  admin_audit
@@ -242,9 +242,17 @@ lxc exec cloud -- bash -c "occ app:install calendar
                            occ app:enable  announcementcenter
                            occ app:install richdocuments
                            occ app:enable  richdocuments
+                           occ app:install quota_warning
+                           occ app:enable  quota_warning
                            "
 
-echo "$($_ORANGE_)configure SMTP in Nextcloud$($_WHITE_)"
+echo "$($_ORANGE_)Enable quota warning notification$($_WHITE_)"
+lxc exec cloud -- bash -c "occ config:app:set quota_warning info_email    --value='yes'
+                           occ config:app:set quota_warning warning_email --value='yes'
+                           occ config:app:set quota_warning alert_email   --value='yes'
+                           "
+
+echo "$($_ORANGE_)Configure SMTP in Nextcloud$($_WHITE_)"
 lxc exec cloud -- bash -c "occ config:system:set mail_smtpmode --value='smtp'
                            occ config:system:set mail_smtpauthtype --value='LOGIN'
                            occ config:system:set mail_from_address --value='cloud'
