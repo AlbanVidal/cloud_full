@@ -106,6 +106,10 @@ lxc exec smtp -- bash -c "echo $FQDN > /etc/mailname
 echo "$($_ORANGE_)Clean package cache (.deb files)$($_WHITE_)"
 lxc exec smtp -- bash -c "apt-get clean"
 
+echo "$($_ORANGE_)Set CPU and Memory limits$($_WHITE_)"
+lxc profile add smtp $LXC_PROFILE_smtp_CPU
+lxc profile add smtp $LXC_PROFILE_smtp_MEM
+
 echo "$($_ORANGE_)Reboot container to free memory$($_WHITE_)"
 lxc restart smtp
 
