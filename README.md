@@ -4,8 +4,8 @@ Full personal cloud
 **Automated deploy your private cloud**
 
 Working on:
-[x] Debian 9 (stretch)
-[ ] Debian 10 (buster)  => Test in progress
++ [x] Debian 9 (stretch)
++ [ ] Debian 10 (buster)  => Test in progress
 
 This scripts deploy this solution :
 + Private cloud: Nextcloud
