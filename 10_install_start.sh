@@ -53,7 +53,7 @@ else
     echo "$($_ORANGE_)Please reply to the next questions$($_WHITE_)"
 
     echo ""
-    echo"$($_ORANGE_)** TECHNICAL **$($_WHITE_)"
+    echo "$($_ORANGE_)** TECHNICAL **$($_WHITE_)"
     echo ""
     echo -n "$($_GREEN_)FQDN:$($_WHITE_) "
     read FQDN
