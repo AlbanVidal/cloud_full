@@ -123,10 +123,14 @@ TEST_IP=$(host -t A $FQDN|awk '{print $4}')
 TEST_FQDN=$(host -t PTR $TEST_IP|awk '{print $5}')
 # Remove « . » in end on PTR record
 if [ "${TEST_FQDN::-1}" != "$FQDN" ] ; then
+    echo "$($_RED_)"
     echo "ERROR DNS RECORDS"
     echo "Your FQDN « $FQDN » is not equal to PTR value: « $TEST_FQDN »"
     echo "Please fix that and retry"
+    echo "$($_WHITE_)"
     exit 1
+else
+    echo "$($_GREEN_)FQDN records A and PTR is OK$($_WHITE_)"
 fi
 
 #############
