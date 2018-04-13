@@ -168,10 +168,12 @@ EOF
 sysctl -p /etc/sysctl.d/81-disable-ipv6.conf
 
 ##### DEBIAN
-echo "$($_ORANGE_)Install: snapd, udev, btrfs-tools and LXD with snapd$($_WHITE_)"
+echo "$($_ORANGE_)Install: snapd, udev, btrfs-tools$($_WHITE_)"
 DEBIAN_FRONTEND=noninteractive apt-get -y install snapd udev btrfs-tools > /dev/null
 DEBIAN_FRONTEND=noninteractive apt-get clean
-snap install lxd > /dev/null
+
+echo "$($_ORANGE_)Install: LXD with snap$($_WHITE_)"
+snap install lxd
 
 ##### UBUNTU
 ## Install LXD package
