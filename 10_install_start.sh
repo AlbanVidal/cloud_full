@@ -63,7 +63,7 @@ else
     read TECH_ADMIN_EMAIL
 
     echo ""
-    echo"$($_ORANGE_)** CLOUD **$($_WHITE_)"
+    echo "$($_ORANGE_)** CLOUD **$($_WHITE_)"
     echo ""
     echo -n "$($_GREEN_)Nextcloud Administrator User:$($_WHITE_) "
     read NEXTCLOUD_admin_user
