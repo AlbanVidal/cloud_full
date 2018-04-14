@@ -180,10 +180,10 @@ EOF
 #
 # Create template container
 
-lxc launch images:debian/$DEBIAN_RELEASE template --profile default --profile privNet
-sed -e "s/_IP_PUB_/$IP_TEMPLATE/" -e "s/_IP_PRIV_/$IP_TEMPLATE_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_00-TEMPLATE
-lxc file push /tmp/lxd_interfaces_00-TEMPLATE 00-template/etc/network/interfaces
-lxc file push /tmp/lxd_resolv.conf 00-template/etc/resolv.conf
+lxc launch images:debian/$DEBIAN_RELEASE z-template --profile default --profile privNet
+sed -e "s/_IP_PUB_/$IP_TEMPLATE/" -e "s/_IP_PRIV_/$IP_TEMPLATE_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_z-TEMPLATE
+lxc file push /tmp/lxd_interfaces_z-TEMPLATE z-template/etc/network/interfaces
+lxc file push /tmp/lxd_resolv.conf z-template/etc/resolv.conf
 lxc restart template
 
 ################################################################################
@@ -195,10 +195,10 @@ echo "$($_ORANGE_)Container TEMPLATE: Update, upgrade and install common package
 PACKAGES="vim apt-utils bsd-mailx unattended-upgrades apt-listchanges logrotate"
 
 if [ "$DEBIAN_RELEASE" == "stretch" ] ; then
-    lxc exec template -- bash -c "echo 'deb http://ftp.fr.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/stretch-backports.list"
+    lxc exec z-template -- bash -c "echo 'deb http://ftp.fr.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/stretch-backports.list"
 fi
 
-lxc exec template -- bash -c "
+lxc exec z-template -- bash -c "
     apt-get update > /dev/null
     DEBIAN_FRONTEND=noninteractive apt-get -y install $PACKAGES > /dev/null
     DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null
@@ -210,7 +210,7 @@ lxc exec template -- bash -c "
     systemctl disable exim4
 "
 
-lxc stop template
+lxc stop z-template
 
 ################################################################################
 
@@ -221,7 +221,7 @@ CT_LIST="smtp rvprx mariadb cloud collabora"
 
 for CT in $CT_LIST ; do
     echo "$($_ORANGE_)Create ${CT}...$($_WHITE_)"
-    lxc copy template ${CT}
+    lxc copy z-template ${CT}
     lxc start ${CT}
     IP_PUB="IP_${CT}"
     IP_PRIV="IP_${CT}_PRIV"
