@@ -101,15 +101,20 @@ echo "$($_ORANGE_)Nginx: Conf, Vhosts and tuning$($_WHITE_)"
 # RVPRX common conf
 cat << 'EOF' > /tmp_lxd_rvprx_etc_nginx_RVPRX_common.conf
 # SSL configuration :
+#
+# More details to generate this file:
+# https://mozilla.github.io/server-side-tls/ssl-config-generator/
+
 # drop SSLv3 (POODLE vulnerability)
-    ssl_protocols         TLSv1 TLSv1.1 TLSv1.2;
+    ssl_protocols         TLSv1.2;
 # Recommanded ciphers
-    ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+    ssl_ciphers           'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256';
 # enables server-side protection from BEAST attacks
     ssl_prefer_server_ciphers on;
 # enable session resumption to improve https performance
     ssl_session_cache shared:SSL:50m;
     ssl_session_timeout 5m;
+    ssl_session_tickets off;
 # Diffie-Hellman parameter for DHE ciphersuites, recommended 4096 bits
     ssl_dhparam /etc/nginx/dhparam.pem;
 
@@ -131,7 +136,13 @@ cat << 'EOF' > /tmp_lxd_rvprx_etc_nginx_RVPRX_common.conf
 
 # config to enable HSTS(HTTP Strict Transport Security) https://developer.mozilla.org/en-US/docs/Security/HTTP_Strict_Transport_Security
 # to avoid ssl stripping https://en.wikipedia.org/wiki/SSL_stripping#SSL_stripping
-    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
+# 15768000 seconds = 6 months
+    add_header Strict-Transport-Security "max-age=15768000; includeSubDomains";
+
+# OCSP Stapling ---
+# fetch OCSP records from URL in ssl_certificate and cache them
+    ssl_stapling on;
+    ssl_stapling_verify on;
 EOF
 lxc file push /tmp_lxd_rvprx_etc_nginx_RVPRX_common.conf rvprx/etc/nginx/RVPRX_common.conf
 
@@ -144,7 +155,7 @@ server {
 }
 
 server {
-    listen      443 ssl;
+    listen      443 ssl http2;
     server_name $FQDN;
 
     # Let's Encrypt:
@@ -172,7 +183,7 @@ cat << EOF > /tmp_lxd_rvprx_etc_nginx_rvprx-collabora
 #}
 
 server {
-    listen      443 ssl;
+    listen      443 ssl http2;
     server_name $FQDN_collabora;
 
     # Let's Encrypt:
