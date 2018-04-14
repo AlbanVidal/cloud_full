@@ -94,7 +94,7 @@ lxc exec rvprx -- bash -c "certbot certonly -n --agree-tos --email $TECH_ADMIN_E
 
 # RVPRX dhparam
 echo "$($_ORANGE_)Generating dhparam$($_WHITE_)"
-lxc exec rvprx -- bash -c "openssl dhparam -out /etc/nginx/dhparam.pem 4096"
+lxc exec rvprx -- bash -c "openssl dhparam -out /etc/nginx/dhparam.pem 2048"
 
 echo "$($_ORANGE_)Nginx: Conf, Vhosts and tuning$($_WHITE_)"
 
