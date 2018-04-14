@@ -59,6 +59,12 @@ _ORANGE_="tput setaf 3"
 
 ################################################################################
 
+# Exit if LXD is not installed
+if ! which lxd >/dev/null;then
+    echo "$($_RED_)LXD is not installed$($_WHITE_)"
+    exit 1
+fi
+
 # LXD INIT
 echo "$($_ORANGE_)LXD initialization$($_WHITE_)"
 cat << EOF | lxd init --preseed
