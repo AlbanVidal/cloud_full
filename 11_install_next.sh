@@ -184,7 +184,7 @@ lxc launch images:debian/$DEBIAN_RELEASE z-template --profile default --profile 
 sed -e "s/_IP_PUB_/$IP_TEMPLATE/" -e "s/_IP_PRIV_/$IP_TEMPLATE_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_z-TEMPLATE
 lxc file push /tmp/lxd_interfaces_z-TEMPLATE z-template/etc/network/interfaces
 lxc file push /tmp/lxd_resolv.conf z-template/etc/resolv.conf
-lxc restart template
+lxc restart z-template
 
 ################################################################################
 #
