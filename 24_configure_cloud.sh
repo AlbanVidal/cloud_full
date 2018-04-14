@@ -85,15 +85,34 @@ lxc exec cloud -- bash -c 'echo "sudo -u www-data php /var/www/nextcloud/occ \$@
                            '
 
 echo "$($_ORANGE_)Install packages for nextcloud...$($_WHITE_)"
-lxc exec cloud -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install \
-    wget            \
-    curl            \
-    sudo            \
-    apache2         \
-    mariadb-client  \
-    redis-server    \
-    php7.0 php7.0-fpm php7.0-simplexml php-mysql php-gd php-zip php-mbstring php-curl php-redis php7.0-bz2 php7.0-intl php7.0-mcrypt php7.0-gmp \
-    > /dev/null"
+case $DEBIAN_RELEASE in
+    "stretch" )
+        # Debian 9 => php7.0
+        lxc exec cloud -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install \
+            wget            \
+            curl            \
+            sudo            \
+            apache2         \
+            mariadb-client  \
+            redis-server    \
+            php7.0 php-redis php7.0-fpm php7.0-xml php7.0-mysql php7.0-gd php7.0-zip php7.0-mbstring php7.0-curl php7.0-bz2 php7.0-intl php7.0-mcrypt php7.0-gmp
+            > /dev/null"
+        ;;
+    "buster" )
+        # Debian 10 => php7.1
+        # Missing mcrypt on php7.2
+        lxc exec cloud -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install \
+            wget            \
+            curl            \
+            sudo            \
+            apache2         \
+            mariadb-client  \
+            redis-server    \
+            php7.1 php-redis php7.1-fpm php7.1-xml php7.1-mysql php7.1-gd php7.1-zip php7.1-mbstring php7.1-curl php7.1-bz2 php7.1-intl php7.1-mcrypt php7.1-gmp
+            > /dev/null"
+        ;;
+esac
+
 
 echo "$($_ORANGE_)apache2 FIX ServerName$($_WHITE_)"
 lxc exec cloud -- bash -c "echo 'ServerName $FQDN' > /etc/apache2/conf-available/99_ServerName.conf
