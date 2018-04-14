@@ -180,11 +180,11 @@ EOF
 #
 # Create template container
 
-lxc launch images:debian/$DEBIAN_RELEASE 00-template --profile default --profile privNet
+lxc launch images:debian/$DEBIAN_RELEASE template --profile default --profile privNet
 sed -e "s/_IP_PUB_/$IP_TEMPLATE/" -e "s/_IP_PRIV_/$IP_TEMPLATE_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_00-TEMPLATE
 lxc file push /tmp/lxd_interfaces_00-TEMPLATE 00-template/etc/network/interfaces
 lxc file push /tmp/lxd_resolv.conf 00-template/etc/resolv.conf
-lxc restart 00-template
+lxc restart template
 
 ################################################################################
 #
@@ -195,10 +195,10 @@ echo "$($_ORANGE_)Container TEMPLATE: Update, upgrade and install common package
 PACKAGES="vim apt-utils bsd-mailx unattended-upgrades apt-listchanges logrotate"
 
 if [ "$DEBIAN_RELEASE" == "stretch" ] ; then
-    lxc exec 00-template -- bash -c "echo 'deb http://ftp.fr.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/stretch-backports.list"
+    lxc exec template -- bash -c "echo 'deb http://ftp.fr.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/stretch-backports.list"
 fi
 
-lxc exec 00-template -- bash -c "
+lxc exec template -- bash -c "
     apt-get update > /dev/null
     DEBIAN_FRONTEND=noninteractive apt-get -y install $PACKAGES > /dev/null
     DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null
@@ -210,7 +210,7 @@ lxc exec 00-template -- bash -c "
     systemctl disable exim4
 "
 
-lxc stop 00-template
+lxc stop template
 
 ################################################################################
 
@@ -221,7 +221,7 @@ CT_LIST="smtp rvprx mariadb cloud collabora"
 
 for CT in $CT_LIST ; do
     echo "$($_ORANGE_)Create ${CT}...$($_WHITE_)"
-    lxc copy 00-template ${CT}
+    lxc copy template ${CT}
     lxc start ${CT}
     IP_PUB="IP_${CT}"
     IP_PRIV="IP_${CT}_PRIV"
