@@ -119,8 +119,16 @@ lxc exec cloud -- bash -c "echo 'ServerName $FQDN' > /etc/apache2/conf-available
                            a2enconf 99_ServerName > /dev/null"
 
 echo "$($_ORANGE_)Enable php7-fpm in apache2$($_WHITE_)"
-lxc exec cloud -- bash -c "a2enmod proxy_fcgi setenvif > /dev/null
-                           a2enconf php7.0-fpm > /dev/null"
+case $DEBIAN_RELEASE in
+    "stretch" )
+        lxc exec cloud -- bash -c "a2enmod proxy_fcgi setenvif > /dev/null
+                                   a2enconf php7.0-fpm > /dev/null"
+        ;;
+    "buster" )
+        lxc exec cloud -- bash -c "a2enmod proxy_fcgi setenvif > /dev/null
+                                   a2enconf php7.1-fpm > /dev/null"
+        ;;
+esac
 
 echo "$($_ORANGE_)Enable apache2 mods$($_WHITE_)"
 lxc exec cloud -- bash -c "a2enmod rewrite > /dev/null
@@ -135,10 +143,17 @@ lxc exec cloud -- bash -c "sed -i                                               
     -e 's/;opcache.memory_consumption=64/opcache.memory_consumption=128/'           \
     -e 's/;opcache.save_comments=1/opcache.save_comments=1/'                        \
     -e 's/;opcache.revalidate_freq=2/opcache.revalidate_freq=1/'                    \
-    /etc/php/7.0/fpm/php.ini"
+    /etc/php/7.*/fpm/php.ini"
 
 echo "$($_ORANGE_)Restart FPM$($_WHITE_)"
-lxc exec cloud -- bash -c "systemctl restart php7.0-fpm.service"
+case $DEBIAN_RELEASE in
+    "stretch" )
+        lxc exec cloud -- bash -c "systemctl restart php7.0-fpm.service"
+        ;;
+    "buster" )
+        lxc exec cloud -- bash -c "systemctl restart php7.1-fpm.service"
+        ;;
+esac
 
 echo "$($_ORANGE_)Restart apache2$($_WHITE_)"
 lxc exec cloud -- bash -c "systemctl restart apache2.service"
