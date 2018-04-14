@@ -171,85 +171,64 @@ iface ethPrivate inet static
     address _IP_PRIV_/_CIDR_
 EOF
 
-# TEMPLATE resolv.conf (OpenDNS)
+# TEMPLATE resolv.conf (see 01_NETWORK_VARS to change nameserver)
 cat << EOF > /tmp/lxd_resolv.conf
-nameserver 208.67.222.222
-nameserver 208.67.220.220
+$RESOLV_CONF
 EOF
 
-# CT 1 - CLOUD
-echo "$($_ORANGE_)LXD create container: cloud$($_WHITE_)"
-lxc launch images:debian/$DEBIAN_RELEASE cloud --profile default --profile privNet
-sed -e "s/_IP_PUB_/$IP_cloud/" -e "s/_IP_PRIV_/$IP_cloud_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_cloud
-lxc file push /tmp/lxd_interfaces_cloud cloud/etc/network/interfaces
-lxc file push /tmp/lxd_resolv.conf cloud/etc/resolv.conf
-lxc restart cloud
+################################################################################
+#
+# Create template container
 
-# CT 2 - COLLABORA
-echo "$($_ORANGE_)LXD create container: collabora$($_WHITE_)"
-lxc launch images:debian/$DEBIAN_RELEASE collabora --profile default --profile privNet
-sed -e "s/_IP_PUB_/$IP_collabora/" -e "s/_IP_PRIV_/$IP_collabora_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_collabora
-lxc file push /tmp/lxd_interfaces_collabora collabora/etc/network/interfaces
-lxc file push /tmp/lxd_resolv.conf collabora/etc/resolv.conf
-lxc restart collabora
-
-# CT 3 - MariaDB
-echo "$($_ORANGE_)LXD create container: mariadb$($_WHITE_)"
-lxc launch images:debian/$DEBIAN_RELEASE mariadb --profile default --profile privNet
-sed -e "s/_IP_PUB_/$IP_mariadb/" -e "s/_IP_PRIV_/$IP_mariadb_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_mariadb
-lxc file push /tmp/lxd_interfaces_mariadb mariadb/etc/network/interfaces
-lxc file push /tmp/lxd_resolv.conf mariadb/etc/resolv.conf
-lxc restart mariadb
-
-# CT 4 - RVPRX
-echo "$($_ORANGE_)LXD create container: rvprx$($_WHITE_)"
-lxc launch images:debian/$DEBIAN_RELEASE rvprx --profile default --profile privNet
-sed -e "s/_IP_PUB_/$IP_rvprx/" -e "s/_IP_PRIV_/$IP_rvprx_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_rvprx
-lxc file push /tmp/lxd_interfaces_rvprx rvprx/etc/network/interfaces
-lxc file push /tmp/lxd_resolv.conf rvprx/etc/resolv.conf
-lxc restart rvprx
-
-# CT 5 - SMTP
-echo "$($_ORANGE_)LXD create container: smtp$($_WHITE_)"
-lxc launch images:debian/$DEBIAN_RELEASE smtp --profile default --profile privNet
-sed -e "s/_IP_PUB_/$IP_smtp/" -e "s/_IP_PRIV_/$IP_smtp_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_smtp
-lxc file push /tmp/lxd_interfaces_smtp smtp/etc/network/interfaces
-lxc file push /tmp/lxd_resolv.conf smtp/etc/resolv.conf
-lxc restart smtp
-
-echo "$($_GREEN_)Waiting all containers correctly started (networking...) 5 seconds$($_WHITE_)"
-sleep 5
+lxc launch images:debian/$DEBIAN_RELEASE 00-template --profile default --profile privNet
+sed -e "s/_IP_PUB_/$IP_TEMPLATE/" -e "s/_IP_PRIV_/$IP_TEMPLATE_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_00-TEMPLATE
+lxc file push /tmp/lxd_interfaces_00-TEMPLATE 00-template/etc/network/interfaces
+lxc file push /tmp/lxd_resolv.conf 00-template/etc/resolv.conf
+lxc restart 00-template
 
 ################################################################################
-#### Common containers configuration
+#
+# Configure template container
 
-echo ""
-echo "$($_GREEN_)Common containers configuration$($_WHITE_)"
-echo "$($_ORANGE_)Update, upgrade and install common packages$($_WHITE_)"
-
-CT_LIST="smtp rvprx mariadb cloud collabora"
+echo "$($_ORANGE_)Container TEMPLATE: Update, upgrade and install common packages$($_WHITE_)"
 
 PACKAGES="vim apt-utils bsd-mailx unattended-upgrades apt-listchanges logrotate"
 
-# Configure all container
+if [ "$DEBIAN_RELEASE" == "stretch" ] ; then
+    lxc exec 00-template -- bash -c "echo 'deb http://ftp.fr.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/stretch-backports.list"
+fi
+
+lxc exec 00-template -- bash -c "
+    apt-get update > /dev/null
+    DEBIAN_FRONTEND=noninteractive apt-get -y install $PACKAGES > /dev/null
+    DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null
+    sed -i \
+        -e 's#^//Unattended-Upgrade::Mail .*#Unattended-Upgrade::Mail \"$TECH_ADMIN_EMAIL\";#' \
+        -e 's#^//Unattended-Upgrade::MailOnlyOnError .*#Unattended-Upgrade::MailOnlyOnError \"true\";#' \
+        /etc/apt/apt.conf.d/50unattended-upgrades
+    systemctl stop exim4
+    systemctl disable exim4
+"
+
+lxc stop 00-template
+
+################################################################################
+
+# Create all container from template
+echo "$($_ORANGE_)Create and network configuration for all containers$($_WHITE_)"
+
+CT_LIST="smtp rvprx mariadb cloud collabora"
+
 for CT in $CT_LIST ; do
-    echo "$($_ORANGE_)${CT}...$($_WHITE_)"
-
-    if [ "$DEBIAN_RELEASE" == "stretch" ] ; then
-        lxc exec $CT -- bash -c "echo 'deb http://ftp.fr.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/stretch-backports.list"
-    fi
-
-    lxc exec $CT -- bash -c "
-        apt-get update > /dev/null
-        DEBIAN_FRONTEND=noninteractive apt-get -y install $PACKAGES > /dev/null
-        DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null
-        sed -i \
-            -e 's#^//Unattended-Upgrade::Mail .*#Unattended-Upgrade::Mail \"$TECH_ADMIN_EMAIL\";#' \
-            -e 's#^//Unattended-Upgrade::MailOnlyOnError .*#Unattended-Upgrade::MailOnlyOnError \"true\";#' \
-            /etc/apt/apt.conf.d/50unattended-upgrades
-        systemctl stop exim4
-        systemctl disable exim4
-    "
+    echo "$($_ORANGE_)Create ${CT}...$($_WHITE_)"
+    lxc copy 00-template ${CT}
+    lxc start ${CT}
+    IP_PUB="IP_${CT}"
+    IP_PRIV="IP_${CT}_PRIV"
+    sed -e "s/_IP_PUB_/${!IP_PUB}/" -e "s/_IP_PRIV_/${!IP_PRIV}/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_${CT}
+    lxc file push /tmp/lxd_interfaces_${CT} ${CT}/etc/network/interfaces
+    lxc file push /tmp/lxd_resolv.conf ${CT}/etc/resolv.conf
+    lxc restart $CT
 done
 
 ################################################################################
