@@ -7,6 +7,10 @@ Working on:
 + [x] Debian 9 (stretch)
 + [ ] Debian 10 (buster)  => Test in progress
 
+Debian 10 fails:
++ mariadb with systemd (ownership in unprivileged container)
++ redis-server with systemd (ownership in unprivileged container)
+
 This scripts deploy this solution :
 + Private cloud: Nextcloud
 + Online Office: Collabora Online
