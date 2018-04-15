@@ -5,22 +5,18 @@ Full personal cloud
 
 Working on:
 + [x] Debian 9 (stretch)
-+ [ ] Debian 10 (buster)  => Test in progress
-
-Debian 10 fails:
-+ mariadb with systemd (ownership in unprivileged container)
-+ redis-server with systemd (ownership in unprivileged container)
++ [ ] Debian 10 (buster) ==> Test in progress (see Bugs, end of ReadMe)
 
 This scripts deploy this solution :
-+ Private cloud: Nextcloud
-+ Online Office: Collabora Online
-+ Databases for Nextcloud: MariaDB
-+ Reverse-Proxy in front of Nextcloud and Collabora: Nginx
-+ Nextcloud mail notifications: postfix
++ Private cloud: **Nextcloud**
++ Online Office: **Collabora Online**
++ Databases for Nextcloud: **MariaDB**
++ Reverse-Proxy in front of Nextcloud and Collabora: **Nginx**
++ Nextcloud mail notifications: **postfix**
 
 The following features is enabled :
-+ Auto generate SSL certificate with Let's Encrypt
-+ Isolation betwen components with LXD
++ Auto generate SSL certificate with **Let's Encrypt**
++ Isolation betwen components with **lxd**
 
 ----------------------------------------
 
@@ -85,3 +81,10 @@ You can change this defaults variables in file `03_OTHER_VARS`
 + Nextcloud Log rotate size (default: 100MB)
 + Nextcloud data directory (default: /srv/data-cloud)
 
+----------------------------------------
+
+# Bugs
+
+**Debian 10 fails:**
++ mariadb with systemd (ownership in unprivileged container)
++ redis-server with systemd (ownership in unprivileged container)
