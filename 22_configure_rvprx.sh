@@ -90,9 +90,9 @@ lxc file push /tmp_lxd_rvprx_etc_letsencrypt_cli.ini rvprx/etc/letsencrypt/cli.i
 echo "$($_ORANGE_)Generating certificates: $FQDN$($_WHITE_)"
 lxc exec rvprx -- bash -c "certbot certonly -n --agree-tos --email $TECH_ADMIN_EMAIL --nginx -d $FQDN,$FQDN_collabora > /dev/null"
 
-# RVPRX dhparam
-echo "$($_ORANGE_)Generating dhparam$($_WHITE_)"
-lxc exec rvprx -- bash -c "openssl dhparam -out /etc/nginx/dhparam.pem 2048"
+## RVPRX dhparam
+#echo "$($_ORANGE_)Generating dhparam$($_WHITE_)"
+#lxc exec rvprx -- bash -c "openssl dhparam -out /etc/nginx/dhparam.pem 2048"
 
 echo "$($_ORANGE_)Nginx: Conf, Vhosts and tuning$($_WHITE_)"
 
@@ -114,7 +114,8 @@ cat << 'EOF' > /tmp_lxd_rvprx_etc_nginx_RVPRX_common.conf
     ssl_session_timeout 5m;
     ssl_session_tickets off;
 # Diffie-Hellman parameter for DHE ciphersuites, recommended 4096 bits
-    ssl_dhparam /etc/nginx/dhparam.pem;
+# DISABLED
+#    ssl_dhparam /etc/nginx/dhparam.pem;
 
 ### force timeouts if one of backend is died ##
     proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
