@@ -84,7 +84,7 @@ networks:
   config:
     ipv4.address: $IP_LXD/$CIDR
     ipv4.nat: "true"
-    ipv4.dhcp: "false"
+    ipv4.dhcp: "true"
     ipv6.address: none
 
 - name: lxdbrINT
