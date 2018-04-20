@@ -20,13 +20,13 @@ nameserver 208.67.220.220"
 CIDR=24
 #
 # External Network (Internet)
+lxdbrEXT_DHCP_RANGE="192.168.100.100,192.168.100.200"
 IP_LXD="192.168.100.1"
 IP_cloud="192.168.100.2"
 IP_collabora="192.168.100.3"
 IP_mariadb="192.168.100.4"
 IP_rvprx="192.168.100.5"
 IP_smtp="192.168.100.6"
-IP_TEMPLATE="192.168.100.99"
 #
 # Internal Network (Private)
 IP_LXD_PRIV="192.168.200.1"
@@ -35,7 +35,6 @@ IP_collabora_PRIV="192.168.200.3"
 IP_mariadb_PRIV="192.168.200.4"
 IP_rvprx_PRIV="192.168.200.5"
 IP_smtp_PRIV="192.168.200.6"
-IP_TEMPLATE_PRIV="192.168.200.99"
 #
 # Private Network (for Postfix)
 PRIVATE_NETWORK="192.168.200.0/24"

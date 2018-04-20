@@ -85,6 +85,7 @@ networks:
     ipv4.address: $IP_LXD/$CIDR
     ipv4.nat: "true"
     ipv4.dhcp: "true"
+    ipv4.dhcp.ranges: "$lxdbrEXT_DHCP_RANGE
     ipv6.address: none
 
 - name: lxdbrINT
@@ -187,8 +188,6 @@ EOF
 # Create template container
 
 lxc launch images:debian/$DEBIAN_RELEASE z-template --profile default --profile privNet
-sed -e "s/_IP_PUB_/$IP_TEMPLATE/" -e "s/_IP_PRIV_/$IP_TEMPLATE_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_z-TEMPLATE
-lxc file push /tmp/lxd_interfaces_z-TEMPLATE z-template/etc/network/interfaces
 lxc file push /tmp/lxd_resolv.conf z-template/etc/resolv.conf
 lxc restart z-template
 
@@ -244,7 +243,6 @@ for CT in $CT_LIST ; do
     IP_PRIV="IP_${CT}_PRIV"
     sed -e "s/_IP_PUB_/${!IP_PUB}/" -e "s/_IP_PRIV_/${!IP_PRIV}/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_${CT}
     lxc file push /tmp/lxd_interfaces_${CT} ${CT}/etc/network/interfaces
-    lxc file push /tmp/lxd_resolv.conf ${CT}/etc/resolv.conf
     lxc restart $CT
 done
 
