@@ -70,6 +70,9 @@ echo "$($_ORANGE_)Add collaboraoffice repo and install collabora-online$($_WHITE
 # Used to restrict FQDN able to call collabora
 DOMAIN=$(echo $FQDN| sed 's#\.#\\\\.#g')
 lxc exec collabora -- bash -c "
+                               # Update and install basic packages
+                               apt-get update > /dev/null
+                               apt-get -y install gnupg
                                # Add key and install packages
                                apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0C54D189F4BA284D
                                echo 'deb https://www.collaboraoffice.com/repos/CollaboraOnline/CODE-debian9 ./' >> /etc/apt/sources.list
