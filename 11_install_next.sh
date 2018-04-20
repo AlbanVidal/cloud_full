@@ -191,7 +191,6 @@ lxc launch images:debian/$DEBIAN_RELEASE z-template --profile default --profile 
 lxc exec z-template -- bash -c "
                                 echo -e 'auto lo\\niface lo inet loopback\\n\\nauto ethPublic\\niface ethPublic inet dhcp' > /etc/network/interfaces
                                "
-lxc file push /tmp/lxd_resolv.conf z-template/etc/resolv.conf
 lxc restart z-template
 
 ################################################################################
@@ -246,6 +245,7 @@ for CT in $CT_LIST ; do
     IP_PRIV="IP_${CT}_PRIV"
     sed -e "s/_IP_PUB_/${!IP_PUB}/" -e "s/_IP_PRIV_/${!IP_PRIV}/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_${CT}
     lxc file push /tmp/lxd_interfaces_${CT} ${CT}/etc/network/interfaces
+    lxc file push /tmp/lxd_resolv.conf ${CT}/etc/resolv.conf
     lxc restart $CT
 done
 
