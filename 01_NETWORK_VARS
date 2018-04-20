@@ -20,7 +20,7 @@ nameserver 208.67.220.220"
 CIDR=24
 #
 # External Network (Internet)
-lxdbrEXT_DHCP_RANGE="192.168.100.100,192.168.100.200"
+lxdbrEXT_DHCP_RANGE="192.168.100.100-192.168.100.199"
 IP_LXD="192.168.100.1"
 IP_cloud="192.168.100.2"
 IP_collabora="192.168.100.3"
