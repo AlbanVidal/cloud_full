@@ -83,6 +83,18 @@ You can change this defaults variables in file `03_OTHER_VARS`
 
 ----------------------------------------
 
+# Tips
+
+## Screen
+
+With `lxc shell` or `lxc exec <ct_name> bash`, you can't open **screen** in container
+
+We have two solution for that :
+  1. Use ssh
+  2. Open tty: `lxc exec cloud -- bash -c "exec >/dev/tty 2>&1 </dev/tty && bash"`
+
+----------------------------------------
+
 # Bugs
 
 **Debian 10 fails:**
