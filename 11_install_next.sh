@@ -188,6 +188,9 @@ EOF
 # Create template container
 
 lxc launch images:debian/$DEBIAN_RELEASE z-template --profile default --profile privNet
+lxc exec z-template -- bash -c "
+                                echo -e 'auto lo\\niface lo inet loopback\\n\\nauto ethPublic\\niface ethPublic inet dhcp' > /etc/network/interfaces
+                               "
 lxc file push /tmp/lxd_resolv.conf z-template/etc/resolv.conf
 lxc restart z-template
 
