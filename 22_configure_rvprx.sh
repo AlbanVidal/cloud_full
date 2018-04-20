@@ -89,8 +89,6 @@ lxc file push /tmp_lxd_rvprx_etc_letsencrypt_cli.ini rvprx/etc/letsencrypt/cli.i
 # Generating certificates
 echo "$($_ORANGE_)Generating certificates: $FQDN$($_WHITE_)"
 lxc exec rvprx -- bash -c "certbot certonly -n --agree-tos --email $TECH_ADMIN_EMAIL --nginx -d $FQDN,$FQDN_collabora > /dev/null"
-#echo "$($_ORANGE_)Generating certificates: $FQDN_collabora$($_WHITE_)"
-#lxc exec rvprx -- bash -c "certbot certonly -n --agree-tos --email $TECH_ADMIN_EMAIL --nginx -d $FQDN_collabora > /dev/null"
 
 # RVPRX dhparam
 echo "$($_ORANGE_)Generating dhparam$($_WHITE_)"
@@ -176,11 +174,11 @@ EOF
 lxc file push /tmp_lxd_rvprx_etc_nginx_rvprx-cloud rvprx/etc/nginx/sites-available/rvprx-cloud
 
 cat << EOF > /tmp_lxd_rvprx_etc_nginx_rvprx-collabora
-#server {
-#    listen      80;
-#    server_name $FQDN_collabora;
-#    return 301  https://$FQDN_collabora\$request_uri;
-#}
+server {
+    listen      80;
+    server_name $FQDN_collabora;
+    return 301  https://$FQDN_collabora\$request_uri;
+}
 
 server {
     listen      443 ssl http2;
