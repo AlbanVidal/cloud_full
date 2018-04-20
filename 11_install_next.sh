@@ -103,7 +103,7 @@ profiles:
   description: "Default Net and storage"
   devices:
     ethPublic:
-      name: ethPublic
+      name: eth0
       nictype: bridged
       parent: lxdbrEXT
       type: nic
@@ -168,8 +168,8 @@ cat << EOF > /tmp/lxd_interfaces_TEMPLATE
 auto lo
 iface lo inet loopback
 
-auto ethPublic
-iface ethPublic inet static
+auto eth0
+iface eth0 inet static
     address _IP_PUB_/_CIDR_
     gateway $IP_LXD
 
@@ -188,12 +188,12 @@ EOF
 # Create template container
 
 lxc launch images:debian/$DEBIAN_RELEASE z-template --profile default --profile privNet
-lxc exec z-template -- bash -c "
-                                echo -e 'auto lo\\niface lo inet loopback\\n\\nauto ethPublic\\niface ethPublic inet dhcp' > /etc/network/interfaces
-                               "
-lxc restart z-template
+#lxc exec z-template -- bash -c "
+#                                echo -e 'auto lo\\niface lo inet loopback\\n\\nauto ethPublic\\niface ethPublic inet dhcp' > /etc/network/interfaces
+#                               "
+#lxc restart z-template
 
-echo "$($_ORANGE_)Wait restart of template (dhcp...)$($_WHITE_)"
+echo "$($_ORANGE_)Wait dhcp...$($_WHITE_)"
 sleep 5
 
 ################################################################################
