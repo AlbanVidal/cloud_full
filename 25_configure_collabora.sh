@@ -62,46 +62,41 @@ _ORANGE_="tput setaf 3"
 #### COLLABORA
 echo "$($_GREEN_)BEGIN collabora$($_WHITE_)"
 
-echo "$($_GREEN_)Edit container security to enable Docker (nesting and privileged)$($_WHITE_)"
-# Container privilegied
-lxc config set collabora security.privileged true
-# Enable nesting (Docker in LXD)
-lxc config set collabora security.nesting true
-# Disable apparmor
-#lxc config set collabora raw.lxc lxc.aa_profile=unconfined
-lxc restart collabora
-# wait 5 sec for Network
-sleep 5
+echo "$($_ORANGE_)Add collaboraoffice repo and install collabora-online$($_WHITE_)"
 
-echo "$($_ORANGE_)Add Docker repo and install Docker$($_WHITE_)"
-lxc exec collabora -- bash -c "apt-get -y install curl apt-transport-https gnupg gnupg2 gnupg1 > /dev/null
-                               curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
-                               echo -e '\n# Depôt Docker\ndeb https://download.docker.com/linux/debian $DEBIAN_RELEASE stable' > /etc/apt/sources.list.d/docker.list
-                               apt-get update > /dev/null
-                               apt-get -y install docker-ce > /dev/null
-                               "
+# For ssl, see: https://github.com/CollaboraOnline/Docker-CODE/blob/master/scripts/start-libreoffice.sh
+# For package install, see: https://www.collaboraoffice.com/code/
 
-# NOT IN LXD CONTAINER
-#echo "$($_ORANGE_)Tuning Docker for Debian$($_WHITE_)"
-#lxc exec collabora -- bash -c "mkdir /etc/systemd/system/docker.service.d
-#                               cat << EOF > /etc/systemd/system/docker.service.d/DeviceMapper.conf
-#[Service]
-#ExecStart=
-#ExecStart=/usr/bin/dockerd --storage-driver=devicemapper -H fd://
-#EOF
-#"
-#
-#echo "$($_ORANGE_)Restart Docker$($_WHITE_)"
-#lxc exec collabora -- bash -c "systemctl daemon-reload
-#                               systemctl restart docker
-#                               "
-
-echo "$($_ORANGE_)pull collabora$($_WHITE_)"
-lxc exec collabora -- bash -c "docker pull collabora/code"
-
-# Need to add two « \ » between « . »
+# Used to restrict FQDN able to call collabora
 DOMAIN=$(echo $FQDN| sed 's#\.#\\\\.#g')
-lxc exec collabora -- bash -c "docker run -t -d -p $IP_collabora_PRIV:9980:9980 -e 'domain=$DOMAIN' --restart always --cap-add MKNOD collabora/code"
+lxc exec collabora -- bash -c "
+                               # Add key and install packages
+                               apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0C54D189F4BA284D
+                               echo 'deb https://www.collaboraoffice.com/repos/CollaboraOnline/CODE-debian9 ./' >> /etc/apt/sources.list
+                               apt-get update && apt-get install -y loolwsd code-brand
+                               
+                               # Generate SSL certificates
+                               mkdir -p /opt/ssl/
+                               cd /opt/ssl/
+                               mkdir -p certs/ca
+                               openssl genrsa -out certs/ca/root.key.pem 2048
+                               openssl req -x509 -new -nodes -key certs/ca/root.key.pem -days 9131 -out certs/ca/root.crt.pem -subj '/C=DE/ST=BW/L=Stuttgart/O=Dummy Authority/CN=Dummy Authority'
+                               mkdir -p certs/{servers,tmp}
+                               mkdir -p 'certs/servers/localhost'
+                               openssl genrsa -out 'certs/servers/localhost/privkey.pem' 2048 -key 'certs/servers/localhost/privkey.pem'
+                               openssl req -key 'certs/servers/localhost/privkey.pem' -new -sha256 -out 'certs/tmp/localhost.csr.pem' -subj '/C=DE/ST=BW/L=Stuttgart/O=Dummy Authority/CN=localhost'
+                               openssl x509 -req -in certs/tmp/localhost.csr.pem -CA certs/ca/root.crt.pem -CAkey certs/ca/root.key.pem -CAcreateserial -out certs/servers/localhost/cert.pem -days 9131
+                               mv certs/servers/localhost/privkey.pem /etc/loolwsd/key.pem
+                               mv certs/servers/localhost/cert.pem /etc/loolwsd/cert.pem
+                               mv certs/ca/root.crt.pem /etc/loolwsd/ca-chain.cert.pem
+                               chmod 440 /etc/loolwsd/key.pem
+                               chgrp lool /etc/loolwsd/key.pem
+                               
+                               # Tune trusted FQDN
+                               sed -i '/Allow\\/deny wopi storage./a <host desc=\"Regex pattern of hostname to allow or deny.\" allow=\"true\">$DOMAIN</host>' /etc/loolwsd/loolwsd.xml
+                               
+                               systemctl restart loolwsd
+                              "
 
 ################################################################################
 
