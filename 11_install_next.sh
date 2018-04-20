@@ -217,9 +217,6 @@ lxc exec z-template -- bash -c "
         -e 's#^//Unattended-Upgrade::Mail .*#Unattended-Upgrade::Mail \"$TECH_ADMIN_EMAIL\";#' \
         -e 's#^//Unattended-Upgrade::MailOnlyOnError .*#Unattended-Upgrade::MailOnlyOnError \"true\";#' \
         /etc/apt/apt.conf.d/50unattended-upgrades
-    # Disable exim
-    systemctl stop exim4
-    systemctl disable exim4
     # Tune logrotate cron (add -f)
     echo -e '#!/bin/sh\ntest -x /usr/sbin/logrotate || exit 0\n/usr/sbin/logrotate -f /etc/logrotate.conf' > /etc/cron.daily/logrotate
     # Disable IPv6
