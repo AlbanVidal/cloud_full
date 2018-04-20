@@ -193,6 +193,9 @@ lxc exec z-template -- bash -c "
                                "
 lxc restart z-template
 
+echo "$($_ORANGE_)Wait restart of template (dhcp...)$($_WHITE_)"
+sleep 5
+
 ################################################################################
 #
 # Configure template container
