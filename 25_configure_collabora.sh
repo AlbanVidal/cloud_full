@@ -72,11 +72,11 @@ DOMAIN=$(echo $FQDN| sed 's#\.#\\\\.#g')
 lxc exec collabora -- bash -c "
                                # Update and install basic packages
                                apt-get update > /dev/null
-                               apt-get -y install gnupg apt-transport-https
+                               apt-get -y install gnupg apt-transport-https > /dev/null
                                # Add key and install packages
-                               apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0C54D189F4BA284D
+                               apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0C54D189F4BA284D > /dev/null
                                echo 'deb https://www.collaboraoffice.com/repos/CollaboraOnline/CODE-debian9 ./' >> /etc/apt/sources.list
-                               apt-get update && apt-get install -y loolwsd code-brand
+                               apt-get update && apt-get install -y loolwsd code-brand > /dev/null
                                
                                # Generate SSL certificates
                                mkdir -p /opt/ssl/
