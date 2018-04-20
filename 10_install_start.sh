@@ -55,6 +55,8 @@ else
     echo ""
     echo "$($_ORANGE_)** TECHNICAL **$($_WHITE_)"
     echo ""
+    echo -n "$($_GREEN_)Internet network interface:$($_WHITE_) "
+    read INTERNET_ETH
     echo -n "$($_GREEN_)FQDN:$($_WHITE_) "
     read FQDN
     echo -n "$($_GREEN_)Collabora FQDN:$($_WHITE_) "
@@ -73,6 +75,7 @@ else
     read -rs NEXTCLOUD_admin_password
 
     cat << EOF > 00_VARS
+INTERNET_ETH="$INTERNET_ETH"
 FQDN="$FQDN"
 FQDN_collabora="$FQDN_collabora"
 TECH_ADMIN_EMAIL="$TECH_ADMIN_EMAIL"
@@ -168,7 +171,7 @@ cat << EOF > /etc/iptables/rules.v4
 :PREROUTING ACCEPT [0:0]
 # Internet Input (PREROUTING)
 -N zone_wan_PREROUTING
--A PREROUTING -i eth0 -j zone_wan_PREROUTING -m comment --comment "Internet Input PREROUTING"
+-A PREROUTING -i $INTERNET_ETH -j zone_wan_PREROUTING -m comment --comment "Internet Input PREROUTING"
 # NAT 80 > RVPRX (nginx)
 -A zone_wan_PREROUTING -p tcp -m tcp --dport 80 -j DNAT --to-destination $IP_rvprx:80 -m comment --comment "Routing port 80 > RVPRX - TCP"
 -A zone_wan_PREROUTING -p udp -m udp --dport 80 -j DNAT --to-destination $IP_rvprx:80 -m comment --comment "Routing port 80 > RVPRX - UDP"
