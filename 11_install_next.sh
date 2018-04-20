@@ -190,8 +190,6 @@ lxc launch images:debian/$DEBIAN_RELEASE z-template --profile default --profile 
 sed -e "s/_IP_PUB_/$IP_TEMPLATE/" -e "s/_IP_PRIV_/$IP_TEMPLATE_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_z-TEMPLATE
 lxc file push /tmp/lxd_interfaces_z-TEMPLATE z-template/etc/network/interfaces
 lxc file push /tmp/lxd_resolv.conf z-template/etc/resolv.conf
-# Postfix default conf file
-lxc file push /etc/postfix/main.cf z-template/etc/postfix/main.cf
 lxc restart z-template
 
 ################################################################################
@@ -223,6 +221,11 @@ lxc exec z-template -- bash -c "
     # Disable IPv6
     echo 'net.ipv6.conf.all.disable_ipv6 = 1' > /etc/sysctl.d/98-disable-ipv6.conf
 "
+
+# Postfix default conf file
+# Copy file in tmp becose « snap » is isoled, can't acess to root dir
+cp /etc/postfix/main.cf /tmp/template_postfix_main.cf
+lxc file push /tmp/template_postfix_main.cf z-template/etc/postfix/main.cf
 
 lxc stop z-template
 
