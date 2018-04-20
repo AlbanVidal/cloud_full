@@ -85,7 +85,7 @@ networks:
     ipv4.address: $IP_LXD/$CIDR
     ipv4.nat: "true"
     ipv4.dhcp: "true"
-    ipv4.dhcp.ranges: "$lxdbrEXT_DHCP_RANGE
+    ipv4.dhcp.ranges: $lxdbrEXT_DHCP_RANGE
     ipv6.address: none
 
 - name: lxdbrINT
