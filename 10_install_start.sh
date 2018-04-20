@@ -100,7 +100,7 @@ fi
 #############
 echo "$($_ORANGE_)Update and Upgrade system packages and default apt configuration$($_WHITE_)"
 
-PACKAGES="vim apt-utils bsd-mailx unattended-upgrades apt-listchanges bind9-host logrotate"
+PACKAGES="vim apt-utils bsd-mailx unattended-upgrades apt-listchanges bind9-host logrotate postfix"
 
 if [ "$DEBIAN_RELEASE" == "stretch" ] ; then
     # Add backports
@@ -111,10 +111,13 @@ fi
 apt-get update > /dev/null
 DEBIAN_FRONTEND=noninteractive apt-get -y install $PACKAGES > /dev/null
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null
+# Unattended configuration
 sed -i \
     -e "s#^//Unattended-Upgrade::Mail .*#Unattended-Upgrade::Mail \"$TECH_ADMIN_EMAIL\";#" \
     -e "s#^//Unattended-Upgrade::MailOnlyOnError .*#Unattended-Upgrade::MailOnlyOnError \"true\";#" \
     /etc/apt/apt.conf.d/50unattended-upgrades
+# Tune logrotate cron (add -f)
+echo -e '#!/bin/sh\ntest -x /usr/sbin/logrotate || exit 0\n/usr/sbin/logrotate -f /etc/logrotate.conf' > /etc/cron.daily/logrotate
 
 #############
 
@@ -134,6 +137,22 @@ else
 fi
 
 #############
+
+# Postfix conf file
+cat << EOF > /etc/postfix/main.cf
+mydomain = $FQDN
+myorigin = \$mydomain
+smtpd_banner = \$myhostname ESMTP \$mail_name (Debian/GNU)
+biff = no
+append_dot_mydomain = no
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+mydestination = \$myhostname, localhost.\$mydomain, localhost
+relayhost = $IP_smtp_PRIV
+inet_interfaces = loopback-only
+recipient_delimiter = +
+inet_protocols = ipv4
+EOF
 
 # Nat post 80 and 443 => RVPRX
 # Enable Masquerade and NAT rules

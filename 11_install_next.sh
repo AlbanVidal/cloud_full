@@ -90,7 +90,7 @@ networks:
 - name: lxdbrINT
   type: bridge
   config:
-    ipv4.address: none
+    ipv4.address: $IP_LXD_PRIV/$CIDR
     ipv4.nat: "false"
     ipv4.dhcp: "false"
     ipv6.address: none
@@ -190,6 +190,8 @@ lxc launch images:debian/$DEBIAN_RELEASE z-template --profile default --profile 
 sed -e "s/_IP_PUB_/$IP_TEMPLATE/" -e "s/_IP_PRIV_/$IP_TEMPLATE_PRIV/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_z-TEMPLATE
 lxc file push /tmp/lxd_interfaces_z-TEMPLATE z-template/etc/network/interfaces
 lxc file push /tmp/lxd_resolv.conf z-template/etc/resolv.conf
+# Postfix default conf file
+lxc file push /etc/postfix/main.cf z-template/etc/postfix/main.cf
 lxc restart z-template
 
 ################################################################################
@@ -198,7 +200,7 @@ lxc restart z-template
 
 echo "$($_ORANGE_)Container TEMPLATE: Update, upgrade and install common packages$($_WHITE_)"
 
-PACKAGES="vim apt-utils bsd-mailx unattended-upgrades apt-listchanges logrotate"
+PACKAGES="vim apt-utils bsd-mailx unattended-upgrades apt-listchanges logrotate postfix"
 
 if [ "$DEBIAN_RELEASE" == "stretch" ] ; then
     lxc exec z-template -- bash -c "echo 'deb http://ftp.fr.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/stretch-backports.list"
@@ -208,12 +210,18 @@ lxc exec z-template -- bash -c "
     apt-get update > /dev/null
     DEBIAN_FRONTEND=noninteractive apt-get -y install $PACKAGES > /dev/null
     DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null
+    # Unattended configuration
     sed -i \
         -e 's#^//Unattended-Upgrade::Mail .*#Unattended-Upgrade::Mail \"$TECH_ADMIN_EMAIL\";#' \
         -e 's#^//Unattended-Upgrade::MailOnlyOnError .*#Unattended-Upgrade::MailOnlyOnError \"true\";#' \
         /etc/apt/apt.conf.d/50unattended-upgrades
+    # Disable exim
     systemctl stop exim4
     systemctl disable exim4
+    # Tune logrotate cron (add -f)
+    echo -e '#!/bin/sh\ntest -x /usr/sbin/logrotate || exit 0\n/usr/sbin/logrotate -f /etc/logrotate.conf' > /etc/cron.daily/logrotate
+    # Disable IPv6
+    echo 'net.ipv6.conf.all.disable_ipv6 = 1' > /etc/sysctl.d/98-disable-ipv6.conf
 "
 
 lxc stop z-template
