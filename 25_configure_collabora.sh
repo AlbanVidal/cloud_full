@@ -81,7 +81,8 @@ lxc exec collabora -- bash -c "
                                # Add key and install packages
                                apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0C54D189F4BA284D > /dev/null
                                echo 'deb https://www.collaboraoffice.com/repos/CollaboraOnline/CODE-debian9 ./' >> /etc/apt/sources.list
-                               apt-get update && apt-get install -y loolwsd code-brand > /dev/null
+                               apt-get update > /dev/null
+                               apt-get install -y loolwsd code-brand > /dev/null
                                
                                # Generate SSL certificates
                                mkdir -p /opt/ssl/
