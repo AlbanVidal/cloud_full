@@ -62,6 +62,11 @@ _ORANGE_="tput setaf 3"
 #### COLLABORA
 echo "$($_GREEN_)BEGIN collabora$($_WHITE_)"
 
+echo "$($_GREEN_)Edit container security to enable privileged mode$($_WHITE_)"
+lxc config set collabora security.privileged true
+lxc restart collabora
+sleep 5
+
 echo "$($_ORANGE_)Add collaboraoffice repo and install collabora-online$($_WHITE_)"
 
 # For ssl, see: https://github.com/CollaboraOnline/Docker-CODE/blob/master/scripts/start-libreoffice.sh
