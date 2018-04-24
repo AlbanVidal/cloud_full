@@ -112,12 +112,12 @@ lxc exec collabora -- bash -c "
 echo "$($_ORANGE_)Clean package cache (.deb files)$($_WHITE_)"
 lxc exec collabora -- bash -c "apt-get clean"
 
+echo "$($_ORANGE_)Reboot container to free memory$($_WHITE_)"
+lxc restart collabora
+
 echo "$($_ORANGE_)Set CPU and Memory limits$($_WHITE_)"
 lxc profile add collabora $LXC_PROFILE_collabora_CPU
 lxc profile add collabora $LXC_PROFILE_collabora_MEM
-
-echo "$($_ORANGE_)Reboot container to free memory$($_WHITE_)"
-lxc restart collabora
 
 echo "$($_GREEN_)END collabora$($_WHITE_)"
 echo ""
