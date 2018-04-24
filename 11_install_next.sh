@@ -228,6 +228,9 @@ lxc exec z-template -- bash -c "
 cp /etc/postfix/main.cf /tmp/template_postfix_main.cf
 lxc file push /tmp/template_postfix_main.cf z-template/etc/postfix/main.cf
 
+# Copy /etc/crontab for Send crontab return to admin (TECH_ADMIN_EMAIL)
+lxc file push /etc/crontab z-template/etc/crontab
+
 lxc stop z-template
 
 ################################################################################

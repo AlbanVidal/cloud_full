@@ -157,6 +157,9 @@ recipient_delimiter = +
 inet_protocols = ipv4
 EOF
 
+# Send crontab return to admin (TECH_ADMIN_EMAIL)
+sed -i "1s/^/# Send cron report to admin\nMAILTO='$TECH_ADMIN_EMAIL'\n\n/" /etc/crontab
+
 # Nat post 80 and 443 => RVPRX
 # Enable Masquerade and NAT rules
 echo "$($_ORANGE_)Install: iptables-persistent$($_WHITE_)"
