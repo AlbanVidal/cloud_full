@@ -329,7 +329,7 @@ echo "$($_ORANGE_)Clean package cache (.deb files)$($_WHITE_)"
 lxc exec cloud -- bash -c "apt-get clean"
 
 echo "$($_ORANGE_)Reboot container to free memory$($_WHITE_)"
-lxc restart cloud
+lxc restart cloud --force
 
 echo "$($_ORANGE_)Set CPU and Memory limits$($_WHITE_)"
 lxc profile add cloud $LXC_PROFILE_cloud_CPU

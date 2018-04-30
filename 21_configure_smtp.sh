@@ -110,7 +110,7 @@ echo "$($_ORANGE_)Clean package cache (.deb files)$($_WHITE_)"
 lxc exec smtp -- bash -c "apt-get clean"
 
 echo "$($_ORANGE_)Reboot container to free memory$($_WHITE_)"
-lxc restart smtp
+lxc restart smtp --force
 
 echo "$($_ORANGE_)Set CPU and Memory limits$($_WHITE_)"
 lxc profile add smtp $LXC_PROFILE_smtp_CPU

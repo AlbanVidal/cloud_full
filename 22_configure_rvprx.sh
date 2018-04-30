@@ -264,7 +264,7 @@ echo "$($_ORANGE_)Clean package cache (.deb files)$($_WHITE_)"
 lxc exec rvprx -- bash -c "apt-get clean"
 
 echo "$($_ORANGE_)Reboot container to free memory$($_WHITE_)"
-lxc restart rvprx
+lxc restart rvprx --force
 
 echo "$($_ORANGE_)Set CPU and Memory limits$($_WHITE_)"
 lxc profile add rvprx $LXC_PROFILE_rvprx_CPU

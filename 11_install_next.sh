@@ -237,7 +237,7 @@ lxc file push /tmp/template_postfix_main.cf z-template/etc/postfix/main.cf
 # Copy /etc/crontab for Send crontab return to admin (TECH_ADMIN_EMAIL)
 lxc file push /etc/crontab z-template/etc/crontab
 
-lxc stop z-template
+lxc stop z-template --force
 
 ################################################################################
 
@@ -255,7 +255,7 @@ for CT in $CT_LIST ; do
     sed -e "s/_IP_PUB_/${!IP_PUB}/" -e "s/_IP_PRIV_/${!IP_PRIV}/" -e "s/_CIDR_/$CIDR/" /tmp/lxd_interfaces_TEMPLATE > /tmp/lxd_interfaces_${CT}
     lxc file push /tmp/lxd_interfaces_${CT} ${CT}/etc/network/interfaces
     lxc file push /tmp/lxd_resolv.conf ${CT}/etc/resolv.conf
-    lxc restart $CT
+    lxc restart $CT --force
 done
 
 ################################################################################
