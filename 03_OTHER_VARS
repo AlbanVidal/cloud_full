@@ -17,7 +17,7 @@ TIME_ZONE="Europe/Paris"
 NEXTCLOUD_LOG_ROTATE_SIZE="100"
 
 # Nextcloud data directory
-NEXTCLOUD_DATA_DIR="/srv/data-cloud"
+NEXTCLOUD_DATA_DIR="/srv/data/cloud"
 
 ## Debian release
 #
@@ -26,3 +26,6 @@ NEXTCLOUD_DATA_DIR="/srv/data-cloud"
 #
 DEBIAN_RELEASE="stretch"
 #DEBIAN_RELEASE="buster"
+
+# If you have already configured lxd manually (lxd init), set that to false
+LXD_INIT=true

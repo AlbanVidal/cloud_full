@@ -67,7 +67,13 @@ fi
 
 # LXD INIT
 echo "$($_ORANGE_)LXD initialization$($_WHITE_)"
-cat << EOF | lxd init --preseed
+
+# Test if LXD_INIT=true (see 03_OTHER_VARS to edit)
+if ! $LXD_INIT; then
+    echo "$($_ORANGE_)You have choose to not configure lxd$($_WHITE_)"
+else
+    # Initializing of lxd
+    cat << EOF | lxd init --preseed
 # Daemon settings
 config:
   images.auto_update_interval: 15
@@ -160,8 +166,8 @@ profiles:
   description: "4GB RAM"
   config:
     limits.memory: 4GB
-
 EOF
+fi
 
 # TEMPLATE interfaces containers
 cat << EOF > /tmp/lxd_interfaces_TEMPLATE
