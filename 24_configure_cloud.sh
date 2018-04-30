@@ -180,7 +180,7 @@ echo "$($_ORANGE_)apache2 listen only in Private IP$($_WHITE_)"
 lxc exec cloud -- bash -c "echo 'Listen $IP_cloud_PRIV:80' > /etc/apache2/ports.conf"
 
 echo "$($_ORANGE_)Download and uncompress Nextcloud$($_WHITE_)"
-lxc exec cloud -- bash -c "wget -q https://download.nextcloud.com/server/releases/nextcloud-13.0.1.tar.bz2 -O /tmp/nextcloud.tar.bz2"
+lxc exec cloud -- bash -c "wget -q $NEXTCLOUD_URL -O /tmp/nextcloud.tar.bz2"
 lxc exec cloud -- bash -c "tar xaf /tmp/nextcloud.tar.bz2 -C /var/www/"
 lxc exec cloud -- bash -c "rm -f /tmp/nextcloud.tar.bz2"
 
