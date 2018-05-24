@@ -114,13 +114,17 @@ fi
 apt-get update > /dev/null
 DEBIAN_FRONTEND=noninteractive apt-get -y install $PACKAGES > /dev/null
 DEBIAN_FRONTEND=noninteractive apt-get -y upgrade > /dev/null
-# Unattended configuration
-sed -i \
-    -e "s#^//Unattended-Upgrade::Mail .*#Unattended-Upgrade::Mail \"$TECH_ADMIN_EMAIL\";#" \
-    -e "s#^//Unattended-Upgrade::MailOnlyOnError .*#Unattended-Upgrade::MailOnlyOnError \"true\";#" \
-    /etc/apt/apt.conf.d/50unattended-upgrades
-# Tune logrotate cron (add -f)
-echo -e '#!/bin/sh\ntest -x /usr/sbin/logrotate || exit 0\n/usr/sbin/logrotate -f /etc/logrotate.conf' > /etc/cron.daily/logrotate
+
+# Basic Debian configuration
+mkdir -p /srv/git
+git clone https://github.com/AlbanVidal/basic_config_debian.git /srv/git/basic_config_debian
+# Setup config file for auto configuration
+>                                                /srv/git/basic_config_debian/conf
+echo 'UNATTENDED_EMAIL=\"$TECH_ADMIN_EMAIL\"' >> /srv/git/basic_config_debian/conf
+echo 'GIT_USERNAME=\"$HOSTNAME\"'             >> /srv/git/basic_config_debian/conf
+echo 'GIT_EMAIL=\"root@$HOSTNAME\"'           >> /srv/git/basic_config_debian/conf
+# Launch auto configuration script
+/srv/git/basic_config_debian/auto_config.sh
 
 #############
 
