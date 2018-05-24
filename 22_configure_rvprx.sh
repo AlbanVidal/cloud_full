@@ -61,6 +61,11 @@ _ORANGE_="tput setaf 3"
 
 #### RVPRX
 echo "$($_GREEN_)BEGIN rvprx$($_WHITE_)"
+
+echo "$($_ORANGE_)Create symlinks for /etc/nginx and /etc/letsencrypt to /srv/lxd$($_WHITE_)"
+ln -s /srv/lxd/etc/nginx /etc/
+ln -s /srv/lxd/etc/letsencrypt /etc/
+
 echo "$($_ORANGE_)Install specific packages$($_WHITE_)"
 # Nginx - fail2ban
 #lxc exec rvprx -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install nginx iptables fail2ban > /dev/null"

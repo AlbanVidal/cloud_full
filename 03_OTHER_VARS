@@ -21,6 +21,9 @@ NEXTCLOUD_LOG_ROTATE_SIZE="100"
 # Nextcloud data directory
 NEXTCLOUD_DATA_DIR="/srv/data/cloud"
 
+# LXD directory of deported files
+LXD_DEPORTED_DIR="/srv/lxd"
+
 ## Debian release
 #
 # - stretch => OK

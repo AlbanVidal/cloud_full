@@ -80,6 +80,7 @@ You can change this defaults variables in file `03_OTHER_VARS`
 + Time Zone (default: Europe/Paris)
 + Nextcloud Log rotate size (default: 100MB)
 + Nextcloud data directory (default: /srv/data-cloud)
++ LXD deported directory (default: /srv/lxd)
 + Debian Release (default: Stretch — 9)
 + Initialize lxd (default: true)
 + Create certificates (default: true)

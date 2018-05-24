@@ -54,6 +54,7 @@ _ORANGE_="tput setaf 3"
 . 02_RESOURCES_VARS
 
 # Load Other vars 
+# - LXD_DEPORTED_DIR
 # - DEBIAN_RELEASE
 # - LXD_DEFAULT_STORAGE_TYPE
 . 03_OTHER_VARS
@@ -258,6 +259,25 @@ for CT in $CT_LIST ; do
     lxc file push /tmp/lxd_resolv.conf ${CT}/etc/resolv.conf
     lxc restart $CT --force
 done
+
+################################################################################
+
+# Create and attach deported directory
+echo "$($_ORANGE_)Create and attach deported directory ($LXD_DEPORTED_DIR/…)$($_WHITE_)"
+## RVPRX
+mkdir -p \
+    $LXD_DEPORTED_DIR/rvprx/etc/nginx        \
+    $LXD_DEPORTED_DIR/rvprx/etc/letsencrypt  \
+lxc config device add rvprx shared-rvprx disk path=/srv/lxd source=$LXD_DEPORTED_DIR/rvprx/
+
+## Cloud
+mkdir -p \
+    $LXD_DEPORTED_DIR/cloud/var/www
+lxc config device add cloud shared-cloud disk path=/srv/lxd source=$LXD_DEPORTED_DIR/cloud/
+
+# Set mapped UID and GID to LXD deported directory
+echo "$($_ORANGE_)Set mapped UID and GID to LXD deported directory ($LXD_DEPORTED_DIR)$($_WHITE_)"
+chown -R 1000000:1000000 $LXD_DEPORTED_DIR/
 
 ################################################################################
 #### CONTAINER CONFIGURATION
