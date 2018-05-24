@@ -54,6 +54,7 @@ _ORANGE_="tput setaf 3"
 
 # Load Other vars 
 # - DEBIAN_RELEASE
+# - CREATE_CERTIFICATES
 . 03_OTHER_VARS
 
 ################################################################################
@@ -86,7 +87,11 @@ lxc file push /tmp_lxd_rvprx_etc_letsencrypt_cli.ini rvprx/etc/letsencrypt/cli.i
 
 # Generating certificates
 echo "$($_ORANGE_)Generating certificates: $FQDN$($_WHITE_)"
-lxc exec rvprx -- bash -c "certbot certonly -n --agree-tos --email $TECH_ADMIN_EMAIL --nginx -d $FQDN,$FQDN_collabora > /dev/null"
+if $CREATE_CERTIFICATES ; then
+    lxc exec rvprx -- bash -c "certbot certonly -n --agree-tos --email $TECH_ADMIN_EMAIL --nginx -d $FQDN,$FQDN_collabora > /dev/null"
+else
+    echo "$($_GREEN_)CREATE_CERTIFICATES=true, don't create certificates, you need to setup it manually$($_WHITE_)"
+fi
 
 ## RVPRX dhparam
 #echo "$($_ORANGE_)Generating dhparam$($_WHITE_)"

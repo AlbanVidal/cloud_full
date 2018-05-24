@@ -31,3 +31,7 @@ DEBIAN_RELEASE="stretch"
 
 # If you have already configured lxd manually (lxd init), set that to false
 LXD_INIT=true
+
+# Use case, restore existing cloud or to create certificate certificate manually
+# If you don't want to create certificate
+CREATE_CERTIFICATES=true
