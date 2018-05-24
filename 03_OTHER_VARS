@@ -35,3 +35,10 @@ LXD_INIT=true
 # Use case, restore existing cloud or to create certificate certificate manually
 # If you don't want to create certificate
 CREATE_CERTIFICATES=true
+
+# LXD default storage type (driver)
+#
+# - btrfs => OK
+# - lvm   => TESTS IN PROGRESS
+# - dir   => TESTS IN PROGRESS
+LXD_DEFAULT_STORAGE_TYPE="btrfs"

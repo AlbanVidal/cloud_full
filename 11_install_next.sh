@@ -55,6 +55,7 @@ _ORANGE_="tput setaf 3"
 
 # Load Other vars 
 # - DEBIAN_RELEASE
+# - LXD_DEFAULT_STORAGE_TYPE
 . 03_OTHER_VARS
 
 ################################################################################
@@ -81,7 +82,7 @@ config:
 # Storage pools
 storage_pools:
 - name: default
-  driver: btrfs
+  driver: $LXD_DEFAULT_STORAGE_TYPE
 
 # Network devices
 networks:
