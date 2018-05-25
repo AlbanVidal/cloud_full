@@ -80,7 +80,7 @@ lxc exec collabora -- bash -c "
                                apt-get -y install gnupg apt-transport-https > /dev/null
                                # Add key and install packages
                                apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0C54D189F4BA284D > /dev/null
-                               echo 'deb https://www.collaboraoffice.com/repos/CollaboraOnline/CODE-debian9 ./' >> /etc/apt/sources.list
+                               echo 'deb https://www.collaboraoffice.com/repos/CollaboraOnline/CODE-debian9 ./' > /etc/apt/sources.list.d/CollaboraOnline.list
                                apt-get update > /dev/null
                                apt-get install -y loolwsd code-brand > /dev/null
                                
