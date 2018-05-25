@@ -268,7 +268,7 @@ echo "$($_ORANGE_)Create and attach deported directory ($LXD_DEPORTED_DIR/…)$(
 ## RVPRX
 mkdir -p \
     $LXD_DEPORTED_DIR/rvprx/etc/nginx        \
-    $LXD_DEPORTED_DIR/rvprx/etc/letsencrypt  \
+    $LXD_DEPORTED_DIR/rvprx/etc/letsencrypt
 lxc config device add rvprx shared-rvprx disk path=/srv/lxd source=$LXD_DEPORTED_DIR/rvprx/
 
 ## Cloud
