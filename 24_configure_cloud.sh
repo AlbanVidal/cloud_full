@@ -75,7 +75,7 @@ MDP_nextcoud="$(cat /tmp/lxc_nextcloud_password)"
 echo "$($_GREEN_)BEGIN cloud$($_WHITE_)"
 
 echo "$($_ORANGE_)Create symlinks for /etc/nginx and /etc/letsencrypt to /srv/lxd$($_WHITE_)"
-ln -s /srv/lxd/var/www/ /var/
+lxc exec cloud -- ln -s /srv/lxd/var/www/ /var/
 
 echo "$($_ORANGE_)Create and attach data cloud ($NEXTCLOUD_DATA_DIR) directory$($_WHITE_)"
 mkdir -p $NEXTCLOUD_DATA_DIR
