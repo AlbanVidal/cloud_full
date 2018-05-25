@@ -213,3 +213,8 @@ echo ""
 echo "$($_RED_)Please logout/login in bash to prevent snap bug and start script :$($_WHITE_)"
 echo "$($_GREEN_)11_install_next.sh$($_WHITE_)"
 
+# Test if /run/reboot-required file exist, and print warning
+if [ -f /run/reboot-required ] ; then
+    echo "$($_RED_)!! WARNING !!$($_WHITE_)"
+    echo "$($_RED_)/run/reboot-required exist, you need to reboot this node before next step$($_WHITE_)"
+fi
