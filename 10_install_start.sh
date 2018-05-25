@@ -187,13 +187,6 @@ COMMIT
 EOF
 iptables-restore /etc/iptables/rules.v4
 
-echo "$($_ORANGE_)Disable IPv6 on all connexion$($_WHITE_)"
-cat << EOF > /etc/sysctl.d/81-disable-ipv6.conf
-# Disable IPv6 on all connexion
-net.ipv6.conf.all.disable_ipv6 = 1
-EOF
-sysctl -p /etc/sysctl.d/81-disable-ipv6.conf
-
 ##### DEBIAN
 echo "$($_ORANGE_)Install: snapd, udev, btrfs-tools$($_WHITE_)"
 DEBIAN_FRONTEND=noninteractive apt-get -y install snapd udev btrfs-tools > /dev/null
