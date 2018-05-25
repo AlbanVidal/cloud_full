@@ -64,7 +64,7 @@ echo "$($_GREEN_)BEGIN collabora$($_WHITE_)"
 
 echo "$($_GREEN_)Edit container security to enable privileged mode$($_WHITE_)"
 lxc config set collabora security.privileged true
-lxc restart collabora
+lxc restart collabora --force
 sleep 5
 
 echo "$($_ORANGE_)Add collaboraoffice repo and install collabora-online$($_WHITE_)"
