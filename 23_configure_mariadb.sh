@@ -1,6 +1,5 @@
 #!/bin/bash
 
-#
 # BSD 3-Clause License
 # 
 # Copyright (c) 2018, Alban Vidal <alban.vidal@zordhak.fr>
@@ -40,10 +39,6 @@ _GREEN_="tput setaf 2"
 _ORANGE_="tput setaf 3"
 ################################################################################
 
-# TODO
-# - logrotate (all CT)
-# - iptables isolateur: Deny !80 !443
-
 # Load Vars
 . 00_VARS
 
@@ -52,6 +47,9 @@ _ORANGE_="tput setaf 3"
 
 # Load Resources Vars
 . 02_RESOURCES_VARS
+
+# Current git directory
+GIT_DIR="$(realpath ${0%/*})"
 
 ################################################################################
 
@@ -118,6 +116,13 @@ lxc exec mariadb -- bash -c "systemctl restart mariadb"
 
 echo "$($_ORANGE_)Clean package cache (.deb files)$($_WHITE_)"
 lxc exec mariadb -- bash -c "apt-get clean"
+
+################################################################################
+
+# Copy MySQL dump script
+lxc file push $GIT_DIR/templates/mariadb/auto_dump.sh mariadb/usr/local/bin/
+
+################################################################################
 
 echo "$($_ORANGE_)Reboot container to free memory$($_WHITE_)"
 lxc restart mariadb --force

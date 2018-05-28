@@ -266,16 +266,26 @@ done
 
 # Create and attach deported directory
 echo "$($_ORANGE_)Create and attach deported directory ($LXD_DEPORTED_DIR/…)$($_WHITE_)"
+
 ## RVPRX
+## - Nginx configuration
+## - letsencrypt certificates
 mkdir -p \
     $LXD_DEPORTED_DIR/rvprx/etc/nginx        \
     $LXD_DEPORTED_DIR/rvprx/etc/letsencrypt
 lxc config device add rvprx shared-rvprx disk path=/srv/lxd source=$LXD_DEPORTED_DIR/rvprx/
 
 ## Cloud
+## - Nextcloud html directory
 mkdir -p \
     $LXD_DEPORTED_DIR/cloud/var/www
 lxc config device add cloud shared-cloud disk path=/srv/lxd source=$LXD_DEPORTED_DIR/cloud/
+
+## Mariadb
+## - Tempory directory for MySQL dump
+mkdir -p \
+    $LXD_DEPORTED_DIR/mariadb
+lxc config device add mariadb shared-mariadb disk path=/srv/lxd source=$LXD_DEPORTED_DIR/mariadb
 
 # Set mapped UID and GID to LXD deported directory
 echo "$($_ORANGE_)Set mapped UID and GID to LXD deported directory ($LXD_DEPORTED_DIR)$($_WHITE_)"
