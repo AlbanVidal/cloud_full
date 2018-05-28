@@ -123,6 +123,7 @@ git clone https://github.com/AlbanVidal/basic_config_debian.git /srv/git/basic_c
 echo 'UNATTENDED_EMAIL=\"$TECH_ADMIN_EMAIL\"' >> /srv/git/basic_config_debian/conf
 echo 'GIT_USERNAME=\"$HOSTNAME\"'             >> /srv/git/basic_config_debian/conf
 echo 'GIT_EMAIL=\"root@$HOSTNAME\"'           >> /srv/git/basic_config_debian/conf
+echo 'SSH_EMAIL_ALERT=\"$TECH_ADMIN_EMAIL\"'  >> /srv/git/basic_config_debian/conf
 # Launch auto configuration script
 /srv/git/basic_config_debian/auto_config.sh
 
