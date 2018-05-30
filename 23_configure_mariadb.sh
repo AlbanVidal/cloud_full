@@ -120,7 +120,7 @@ lxc exec mariadb -- bash -c "apt-get clean"
 ################################################################################
 
 # Copy MySQL dump script
-lxc file push $GIT_DIR/templates/mariadb/auto_dump.sh mariadb/usr/local/bin/
+lxc file push $GIT_DIR/templates/mariadb/mysql-auto-dump mariadb/usr/local/bin/
 
 ################################################################################
 
