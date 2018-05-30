@@ -22,10 +22,10 @@ The following features is enabled :
 
 # Files description
 
-+ `0*` files contain variables used by scripts
++ `config/0*` files contain variables used by scripts
 + `10_install_start.sh` file is used to configure host (Upgrade, install necessary packages)
 + `11_install_next.sh` file is used to configure all containers. This script launch all `2*.sh` scripts
-+ `2*.sh` scripts is used to configure specific container, they are used by `11_install_next.sh` script
++ `containers/2*.sh` scripts is used to configure specific container, they are used by `11_install_next.sh` script
 
 ----------------------------------------
 
