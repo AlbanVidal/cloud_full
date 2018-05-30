@@ -45,19 +45,19 @@ _ORANGE_="tput setaf 3"
 # - iptables isolateur: Deny !80 !443
 
 # Load Vars
-. 00_VARS
+source config/00_VARS
 
 # Load Network Vars
-. 01_NETWORK_VARS
+source config/01_NETWORK_VARS
 
 # Load Resources Vars
-. 02_RESOURCES_VARS
+source config/02_RESOURCES_VARS
 
 # Load Other vars 
 # - LXD_DEPORTED_DIR
 # - DEBIAN_RELEASE
 # - LXD_DEFAULT_STORAGE_TYPE
-. 03_OTHER_VARS
+source config/03_OTHER_VARS
 
 ################################################################################
 
@@ -70,7 +70,7 @@ fi
 # LXD INIT
 echo "$($_ORANGE_)LXD initialization$($_WHITE_)"
 
-# Test if LXD_INIT=true (see 03_OTHER_VARS to edit)
+# Test if LXD_INIT=true (see config/03_OTHER_VARS to edit)
 if ! $LXD_INIT; then
     echo "$($_ORANGE_)You have choose to not configure lxd$($_WHITE_)"
 else
@@ -186,7 +186,7 @@ iface ethPrivate inet static
     address _IP_PRIV_/_CIDR_
 EOF
 
-# TEMPLATE resolv.conf (see 01_NETWORK_VARS to change nameserver)
+# TEMPLATE resolv.conf (see config/01_NETWORK_VARS to change nameserver)
 cat << EOF > /tmp/lxd_resolv.conf
 $RESOLV_CONF
 EOF

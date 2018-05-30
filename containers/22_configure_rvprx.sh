@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# TODO
-# - logrotate (all CT)
-
-#
 # BSD 3-Clause License
 # 
 # Copyright (c) 2018, Alban Vidal <alban.vidal@zordhak.fr>
@@ -44,18 +40,18 @@ _ORANGE_="tput setaf 3"
 ################################################################################
 
 # Load Vars
-. 00_VARS
+source ../config/00_VARS
 
 # Load Network Vars
-. 01_NETWORK_VARS
+source ../config/01_NETWORK_VARS
 
 # Load Resources Vars
-. 02_RESOURCES_VARS
+source ../config/02_RESOURCES_VARS
 
 # Load Other vars 
 # - DEBIAN_RELEASE
 # - CREATE_CERTIFICATES
-. 03_OTHER_VARS
+source ../config/03_OTHER_VARS
 
 ################################################################################
 
@@ -252,7 +248,7 @@ lxc exec rvprx -- bash -c "ln -s /etc/nginx/sites-available/rvprx-collabora /etc
 # Fix server_names_hash_bucket_size
 lxc exec rvprx -- bash -c "sed -i 's/# server_names_hash_bucket_size.*/server_names_hash_bucket_size 64;/' /etc/nginx/nginx.conf"
 
-# Set max file size to « $MAX_UPLOAD_FILE_SIZE » (editable in 03_OTHER_VARS)
+# Set max file size to « $MAX_UPLOAD_FILE_SIZE » (editable in ../config/03_OTHER_VARS)
 lxc exec rvprx -- bash -c "sed -i '/http {/a \\\t# Set max file size to $MAX_UPLOAD_FILE_SIZE\\n\\tclient_max_body_size $MAX_UPLOAD_FILE_SIZE;' /etc/nginx/nginx.conf |grep -C2 body_size"
 
 # Test nginx conf and reload

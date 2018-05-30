@@ -45,11 +45,11 @@ _ORANGE_="tput setaf 3"
 # - iptables isolateur: Deny !80 !443
 
 # If vars file exist, source
-if [ -f 00_VARS ]; then
-    . 00_VARS
+if [ -f config/00_VARS ]; then
+    source config/00_VARS
 else
     echo ""
-    echo "$($_RED_)File « 00_VARS » don't exist$($_WHITE_)"
+    echo "$($_RED_)File « config/00_VARS » don't exist$($_WHITE_)"
     echo "$($_ORANGE_)Please reply to the next questions$($_WHITE_)"
 
     echo ""
@@ -74,7 +74,7 @@ else
     echo -n "$($_GREEN_)Nextcloud Administrator Password (hidden entry):$($_WHITE_) "
     read -rs NEXTCLOUD_admin_password
 
-    cat << EOF > 00_VARS
+    cat << EOF > config/00_VARS
 INTERNET_ETH="$INTERNET_ETH"
 FQDN="$FQDN"
 FQDN_collabora="$FQDN_collabora"
@@ -85,17 +85,17 @@ NEXTCLOUD_admin_password="$NEXTCLOUD_admin_password"
 EOF
 
     echo ""
-    echo "$($_ORANGE_)File « 00_VARS » generated$($_WHITE_)"
+    echo "$($_ORANGE_)File « config/00_VARS » generated$($_WHITE_)"
     echo ""
 
 fi
 
 # Load Network Vars
-. 01_NETWORK_VARS
+source config/01_NETWORK_VARS
 
 # Load Other vars 
 # - DEBIAN_RELEASE
-. 03_OTHER_VARS
+source config/03_OTHER_VARS
 
 ################################################################################
 #### HOST CONFIGURATION

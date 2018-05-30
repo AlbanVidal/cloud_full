@@ -69,11 +69,11 @@ Launch this second script create and autoconfigure all containers:
 
 ## Network variables
 
-You can change change network settings of LXD containers in file `01_NETWORK_VARS`
+You can change change network settings of LXD containers in file `config/01_NETWORK_VARS`
 
 ## Editables variables
 
-You can change this defaults variables in file `03_OTHER_VARS`
+You can change this defaults variables in file `config/03_OTHER_VARS`
 
 + Default MAX upload file size (default: 5GB)
 + Default Language (default: French)
