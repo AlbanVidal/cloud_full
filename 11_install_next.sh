@@ -299,11 +299,11 @@ echo ""
 
 ############################################################
 #### SMTP
-./21_configure_smtp.sh
+./containers/21_configure_smtp.sh
 
 ############################################################
 #### RVPRX
-./22_configure_rvprx.sh
+./containers/22_configure_rvprx.sh
 
 ############################################################
 #### MariaDB
@@ -312,17 +312,17 @@ echo ""
 MDP_nextcoud=$(openssl rand -base64 32)
 echo "$MDP_nextcoud" > /tmp/lxc_nextcloud_password
 
-./23_configure_mariadb.sh
+./containers/23_configure_mariadb.sh
 
 ############################################################
 #### CLOUD
-./24_configure_cloud.sh
+./containers/24_configure_cloud.sh
 
 # Delete nextcloud database password
 rm -f /tmp/lxc_nextcloud_password
 
 ############################################################
 #### COLLABORA
-./25_configure_collabora.sh
+./containers/25_configure_collabora.sh
 
 ################################################################################
