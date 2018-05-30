@@ -39,17 +39,17 @@ _GREEN_="tput setaf 2"
 _ORANGE_="tput setaf 3"
 ################################################################################
 
+# Path of git repository
+GIT_PATH="$(realpath ${0%/*/*})"
+
 # Load Vars
-source ../config/00_VARS
+source $GIT_PATH/config/00_VARS
 
 # Load Network Vars
-source ../config/01_NETWORK_VARS
+source $GIT_PATH/config/01_NETWORK_VARS
 
 # Load Resources Vars
-source ../config/02_RESOURCES_VARS
-
-# Current git directory
-GIT_DIR="$(realpath ${0%/*})"
+source $GIT_PATH/config/02_RESOURCES_VARS
 
 ################################################################################
 
@@ -120,7 +120,7 @@ lxc exec mariadb -- bash -c "apt-get clean"
 ################################################################################
 
 # Copy MySQL dump script
-lxc file push $GIT_DIR/templates/mariadb/mysql-auto-dump mariadb/usr/local/bin/
+lxc file push $GIT_PATH/templates/mariadb/mysql-auto-dump mariadb/usr/local/bin/
 
 ################################################################################
 

@@ -1,6 +1,5 @@
 #!/bin/bash
 
-#
 # BSD 3-Clause License
 # 
 # Copyright (c) 2018, Alban Vidal <alban.vidal@zordhak.fr>
@@ -40,18 +39,17 @@ _GREEN_="tput setaf 2"
 _ORANGE_="tput setaf 3"
 ################################################################################
 
-# TODO
-# - logrotate (all CT)
-# - iptables isolateur: Deny !80 !443
+# Path of git repository
+GIT_PATH="$(realpath ${0%/*/*})"
 
 # Load Vars
-source ../config/00_VARS
+source $GIT_PATH/config/00_VARS
 
 # Load Network Vars
-source ../config/01_NETWORK_VARS
+source $GIT_PATH/config/01_NETWORK_VARS
 
 # Load Resources Vars
-source ../config/02_RESOURCES_VARS
+source $GIT_PATH/config/02_RESOURCES_VARS
 
 ################################################################################
 

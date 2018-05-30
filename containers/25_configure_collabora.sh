@@ -39,18 +39,21 @@ _GREEN_="tput setaf 2"
 _ORANGE_="tput setaf 3"
 ################################################################################
 
+# Path of git repository
+GIT_PATH="$(realpath ${0%/*/*})"
+
 # Load Vars
-source ../config/00_VARS
+source $GIT_PATH/config/00_VARS
 
 # Load Network Vars
-source ../config/01_NETWORK_VARS
+source $GIT_PATH/config/01_NETWORK_VARS
 
 # Load Resources Vars
-source ../config/02_RESOURCES_VARS
+source $GIT_PATH/config/02_RESOURCES_VARS
 
 # Load Other vars 
 # - DEBIAN_RELEASE
-source ../config/03_OTHER_VARS
+source $GIT_PATH/config/03_OTHER_VARS
 
 ################################################################################
 
