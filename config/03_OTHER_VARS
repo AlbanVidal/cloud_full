@@ -39,12 +39,61 @@ LXD_INIT=true
 # If you don't want to create certificate
 CREATE_CERTIFICATES=true
 
-# LXD default storage type (driver)
+################################################################################
+
+# LXD default storage type (driver) and size
 #
-# - btrfs => OK
-# - lvm   => TESTS IN PROGRESS
-# - dir   => TESTS IN PROGRESS
-LXD_DEFAULT_STORAGE_TYPE="btrfs"
+# For test time, the following command is used:
+# time apt -y install apache2 php7.0
+#
+## LVM in loop device
+# Time: 1m31.501s
+LXD_STORAGE_LOOP_LVM='
+storage_pools:
+- config:
+    size: 15GB
+  description: ""
+  name: default
+  driver: lvm
+'
+#
+## BTRFS in loop device
+# Time: 4m0.135s
+LXD_STORAGE_LOOP_BTRFS='
+storage_pools:
+- config:
+    size: 15GB
+  description: ""
+  name: default-loop-btrfs
+  driver: btrfs
+'
+#
+## LVM in bloc device
+# Time: 1m22.096s
+LXD_STORAGE_BLOC_LVM='
+storage_pools:
+- config:
+    source: /dev/nbd1
+  description: ""
+  name: default
+  driver: lvm
+'
+#
+## BTRFS in bloc device
+# Time: 2m43.360s
+LXD_STORAGE_BLOC_BTRFS='
+storage_pools:
+- config:
+    source: /dev/nbd1
+  description: ""
+  name: default
+  driver: btrfs
+'
+
+# Set default storage:
+LXD_DEFAULT_STORAGE="$LXD_STORAGE_LOOP_LVM"
+
+################################################################################
 
 # LXD Version (with snap)
 # see https://linuxcontainers.org/lxd/news/

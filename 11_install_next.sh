@@ -81,9 +81,7 @@ config:
   images.auto_update_interval: 15
 
 # Storage pools
-storage_pools:
-- name: default
-  driver: $LXD_DEFAULT_STORAGE_TYPE
+$LXD_DEFAULT_STORAGE
 
 # Network devices
 networks:
