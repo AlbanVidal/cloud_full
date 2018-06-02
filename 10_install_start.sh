@@ -103,7 +103,7 @@ source config/03_OTHER_VARS
 #############
 echo "$($_ORANGE_)Update and Upgrade system packages and default apt configuration$($_WHITE_)"
 
-PACKAGES="vim apt-utils bsd-mailx unattended-upgrades apt-listchanges bind9-host logrotate postfix"
+PACKAGES="vim apt-utils bsd-mailx unattended-upgrades apt-listchanges bind9-host logrotate postfix thin-provisioning-tools lvm2"
 
 if [ "$DEBIAN_RELEASE" == "stretch" ] ; then
     # Add backports
