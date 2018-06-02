@@ -45,3 +45,9 @@ CREATE_CERTIFICATES=true
 # - lvm   => TESTS IN PROGRESS
 # - dir   => TESTS IN PROGRESS
 LXD_DEFAULT_STORAGE_TYPE="btrfs"
+
+# LXD Version (with snap)
+# see https://linuxcontainers.org/lxd/news/
+# 2.0 (11/04/2016) with a 5 years support commitment from upstream, ending on 1st of June 2021
+# 3.0 (02/04/2018) will be supported until June 2023
+LXD_VERSION="3.0"

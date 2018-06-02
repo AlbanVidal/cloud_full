@@ -194,7 +194,7 @@ DEBIAN_FRONTEND=noninteractive apt-get -y install snapd udev btrfs-tools > /dev/
 DEBIAN_FRONTEND=noninteractive apt-get clean
 
 echo "$($_ORANGE_)Install: LXD with snap$($_WHITE_)"
-snap install lxd
+snap install lxd --channel="$LXD_VERSION"
 
 ##### UBUNTU
 ## Install LXD package
