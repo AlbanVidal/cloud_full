@@ -91,7 +91,11 @@ storage_pools:
 '
 
 # Set default storage:
-LXD_DEFAULT_STORAGE="$LXD_STORAGE_LOOP_LVM"
+#
+# Bug with lvm !
+#LXD_DEFAULT_STORAGE="$LXD_STORAGE_LOOP_LVM"
+#
+LXD_DEFAULT_STORAGE="$LXD_STORAGE_LOOP_BTRFS"
 
 ################################################################################
 

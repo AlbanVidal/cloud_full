@@ -84,7 +84,7 @@ You can change this defaults variables in file `config/03_OTHER_VARS`
 + Debian Release (default: Stretch — 9)
 + Initialize lxd (default: true)
 + Create certificates (default: true)
-+ LXD default storage driver (default: loop lvm)
++ LXD default storage driver (default: loop btrfs)
 
 ----------------------------------------
 
