@@ -64,7 +64,7 @@ storage_pools:
 - config:
     size: 15GB
   description: ""
-  name: default-loop-btrfs
+  name: default
   driver: btrfs
 '
 #
