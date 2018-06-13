@@ -124,6 +124,9 @@ ssh -p $PORT $SRV 'bash -s' <<< '
 # Copy in local
 scp -P$PORT "$SRV":/srv/lxd/mariadb/mysqldump_*.tar.gz $LOCAL_BACKUP_DIR
 EOF
+
+# Set script as executable
+chmod +x /srv/backup-db.sh
 ```
 
 ### Create Backup DB service (systemd)
