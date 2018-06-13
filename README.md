@@ -88,6 +88,85 @@ You can change this defaults variables in file `config/03_OTHER_VARS`
 
 ----------------------------------------
 
+# Backups
+
+## Data Backup
+
++ All Nextcloud data is defaultly stored in shared directory `/srv/data/cloud/`,
++ All configuration files (Nginx, Apache...) are stored in shared directory `/srv/lxd/`.
+
+See [rsync backup](https://github.com/AlbanVidal/backup) example in my other repository
+
+## Database (MariaDB) Backup
+
+`/usr/local/bin/mysql-auto-dump` script are available in mariadb container.
+He dump databases on shared directory `/srv/lxd/mariadb`
+See below an example to use this with systemd timers
+
+### Create Backup DB script
+
+Please, edit `SRV`, `PORT` and `LOCAL_BACKUP_DIR` variables
+
+```bash
+cat << 'EOF' > /srv/backup-db.sh
+#!/bin/bash
+
+SRV='root@cloud.example.com'
+PORT='22'
+LOCAL_BACKUP_DIR='/srv/backup/data_bdd/'
+
+# Delete OLD dump dans create new for copy
+ssh -p $PORT $SRV 'bash -s' <<< '
+    rm -f /srv/lxd/mariadb/mysqldump_*
+    /snap/bin/lxc exec mariadb -- /usr/local/bin/mysql-auto-dump
+'
+
+# Copy in local
+scp -P$PORT "$SRV":/srv/lxd/mariadb/mysqldump_*.tar.gz $LOCAL_BACKUP_DIR
+EOF
+```
+
+### Create Backup DB service (systemd)
+```bash
+cat << EOF > /etc/systemd/system/backup-db.service
+[Unit]
+Description=Backup databases script
+
+[Service]
+Type=oneshot
+ExecStart=/srv/backup-db.sh
+EOF
+```
+
+### Create Backup DB timer (systemd - cron like)
+```bash
+cat << EOF > /etc/systemd/system/backup-db.timer
+[Unit]
+Description=Backup databases Timer
+
+[Timer]
+# Time between running each consecutive time
+OnCalendar=daily
+
+[Install]
+WantedBy=timers.target
+EOF
+```
+
+### Reload daemon, enable and start the timer
+```bash
+systemctl daemon-reload
+systemctl enable --now backup-db.timer
+```
+
+### You can check timer status, and timers
+```bash
+systemctl status backup.timer
+systemctl list-timers
+```
+
+----------------------------------------
+
 # Tips
 
 ## Screen
