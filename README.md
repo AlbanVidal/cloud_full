@@ -164,7 +164,7 @@ systemctl enable --now backup-db.timer
 
 ### You can check timer status, and timers
 ```bash
-systemctl status backup.timer
+systemctl status backup-db.timer
 systemctl list-timers
 ```
 
