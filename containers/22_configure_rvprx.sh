@@ -40,6 +40,7 @@ _ORANGE_="tput setaf 3"
 ################################################################################
 
 # Path of git repository
+# ../
 GIT_PATH="$(realpath ${0%/*/*})"
 
 # Load Vars
