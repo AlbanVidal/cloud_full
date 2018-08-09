@@ -281,6 +281,7 @@ lxc exec cloud -- bash -c "occ app:install calendar
                            occ app:enable  contacts
                            occ app:install announcementcenter
                            occ app:enable  announcementcenter
+                           # Collabora Online
                            occ app:install richdocuments
                            occ app:enable  richdocuments
                            occ app:install quota_warning
@@ -288,6 +289,9 @@ lxc exec cloud -- bash -c "occ app:install calendar
                            occ app:install files_rightclick
                            occ app:enable  files_rightclick
                            occ app:enable  files_pdfviewer
+                           # Talk
+                           occ app:install spreed
+                           occ app:enable  spreed
                            "
 
 echo "$($_ORANGE_)Enable quota warning notification$($_WHITE_)"
