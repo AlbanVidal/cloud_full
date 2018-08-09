@@ -192,6 +192,12 @@ server {
        proxy_set_header Host \$http_host;
        proxy_read_timeout 36000s;
    }
+
+   # The others URLs are redirected to cloud
+   location / {
+       return 301  https://$FQDN;
+   }
+
 }
 EOF
 lxc file push /tmp_lxd_rvprx_etc_nginx_rvprx-collabora rvprx/etc/nginx/sites-available/rvprx-collabora
