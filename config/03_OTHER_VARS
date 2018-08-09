@@ -2,7 +2,7 @@
 #### This file contain other tunable vars 
 ################################################################################
 
-NEXTCLOUD_URL="https://download.nextcloud.com/server/releases/nextcloud-13.0.4.tar.bz2"
+NEXTCLOUD_URL="https://download.nextcloud.com/server/releases/nextcloud-13.0.5.tar.bz2"
 
 # Default MAX upload file size
 # The default value is 512M
