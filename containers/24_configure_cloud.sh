@@ -274,25 +274,34 @@ echo "$($_ORANGE_)Update .htaccess$($_WHITE_)"
 lxc exec cloud -- bash -c "occ maintenance:update:htaccess > /dev/null"
 
 echo "$($_ORANGE_)Install applications in Nextcloud$($_WHITE_)"
-lxc exec cloud -- bash -c "occ app:install calendar
-                           occ app:enable  calendar
-                           occ app:enable  admin_audit
-                           occ app:install contacts
-                           occ app:enable  contacts
-                           occ app:install announcementcenter
-                           occ app:enable  announcementcenter
-                           # Collabora Online
-                           occ app:install richdocuments
-                           occ app:enable  richdocuments
-                           occ app:install quota_warning
-                           occ app:enable  quota_warning
-                           occ app:install files_rightclick
-                           occ app:enable  files_rightclick
-                           occ app:enable  files_pdfviewer
-                           # Talk
-                           occ app:install spreed
-                           occ app:enable  spreed
-                           "
+lxc exec cloud -- bash -c "
+    occ app:install calendar
+    occ app:enable  calendar
+    occ app:enable  admin_audit
+    occ app:install contacts
+    occ app:enable  contacts
+    occ app:install announcementcenter
+    occ app:enable  announcementcenter
+    # Collabora Online
+    occ app:install richdocuments
+    occ app:enable  richdocuments
+    occ app:install quota_warning
+    occ app:enable  quota_warning
+    occ app:install files_rightclick
+    occ app:enable  files_rightclick
+    occ app:enable  files_pdfviewer
+    # Talk
+    occ app:install spreed
+    occ app:enable  spreed
+    # Registration - WARNING: need to sed admin_approval_required to true !
+    occ app:install registration
+    occ app:enable registration
+"
+
+echo "$($_ORANGE_)Enable admin_approval_required for registration app$($_WHITE_)"
+lxc exec cloud -- bash -c "
+    occ config:app:set registration admin_approval_required --value='yes'
+"
 
 echo "$($_ORANGE_)Enable quota warning notification$($_WHITE_)"
 lxc exec cloud -- bash -c "occ config:app:set quota_warning info_email    --value='yes'
